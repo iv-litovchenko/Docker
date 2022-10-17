@@ -46,8 +46,8 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" || true
 # RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
 # RUN docker-php-ext-install imap
 # RUN docker-php-ext-install gd
+# RUN docker-php-ext-install bz2
 
-RUN docker-php-ext-install bz2
 RUN docker-php-ext-install intl
 RUN docker-php-ext-install iconv
 RUN docker-php-ext-install opcache
