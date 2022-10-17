@@ -1,7 +1,10 @@
+FROM ubuntu:latest
+
 ARG PROJECT_PUBLIC_PATH
 ARG NDDEJS_VERSION
 
-FROM ubuntu:latest
+ENV PROJECT_PUBLIC_PATH = ${PROJECT_PUBLIC_PATH}
+ENV NDDEJS_VERSION = ${NDDEJS_VERSION}
 
 CMD ["sleep", "infinity"]
 WORKDIR /var/www/html
@@ -22,7 +25,7 @@ RUN curl -sL https://deb.nodesource.com/setup_${NDDEJS_VERSION}.x | sudo bash -
 RUN apt-get install -y nodejs
 
 # Install gulp & bower
-RUN npm install --global electron-forge
+# RUN npm install --global electron-forge
 RUN npm install --global gulp
 RUN npm install --global grunt
 RUN npm install --global bower
