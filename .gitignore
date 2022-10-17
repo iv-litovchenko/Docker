@@ -1,0 +1,11 @@
+/node_modules
+/packages
+/public_html
+/projects
+/vendor
+.bash_history
+.env
+/.idea
+/.vscode
+/.docker-data
+/.tmp

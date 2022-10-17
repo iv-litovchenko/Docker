@@ -1,0 +1,71 @@
+ARG PROJECT_PUBLIC_PATH
+ARG PHP_VERSION
+
+FROM php:${PHP_VERSION:8.0}-apache
+
+WORKDIR /var/www/html
+RUN groupadd --gid 1000 project
+RUN useradd --uid 1000 --gid project --shell /bin/bash --create-home project
+
+# Установка программ и утилит
+RUN apt-get update && apt-get install -y \
+    sudo \
+    curl \
+    wget \
+    g++ \
+    git \
+    libbz2-dev \
+    libfreetype6-dev \
+    libicu-dev \
+    libjpeg-dev \
+    libmcrypt-dev \
+    libpng-dev \
+    libreadline-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    jpegoptim optipng pngquant gifsicle \
+    libc-client-dev  \
+    libkrb5-dev \
+    zlib1g-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    supervisor \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Устанавливаем путь к обработке папки "public"
+RUN sed -ri -e 's!/var/www/html!/var/www/html/${PROJECT_PUBLIC_PATH:public}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/html!/var/www/html/${PROJECT_PUBLIC_PATH:public}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+RUN a2enmod rewrite headers
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" || true
+
+# Установка расширений PHP
+# RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
+# RUN docker-php-ext-install imap
+# RUN docker-php-ext-install gd
+
+RUN docker-php-ext-install bz2
+RUN docker-php-ext-install intl
+RUN docker-php-ext-install iconv
+RUN docker-php-ext-install opcache
+RUN docker-php-ext-install bcmath
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+RUN docker-php-ext-install zip
+
+# RUN docker-php-ext-install mbstring
+# RUN docker-php-ext-enable mysqli
+# RUN docker-php-ext-enable imap
+# RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
+
+# COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# ARG uid
+# RUN useradd -G www-data,root -u $uid -d /home/devuser devuser
+# RUN mkdir -p /home/devuser/.composer && \
+#    chown -R devuser:devuser /home/devuser
+
+# Set storage to writable
+# COPY . /var/www/html/
+# RUN chmod -R 777 storage/
