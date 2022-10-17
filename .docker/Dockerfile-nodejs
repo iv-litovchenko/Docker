@@ -1,13 +1,13 @@
 ARG PROJECT_PUBLIC_PATH
-ARG NDDEJS_VERSION
+ARG NODEJS_VERSION
 
 FROM ubuntu:latest
 
 ARG PROJECT_PUBLIC_PATH
-ARG NDDEJS_VERSION
+ARG NODEJS_VERSION
 
 ENV PROJECT_PUBLIC_PATH $PROJECT_PUBLIC_PATH
-ENV NDDEJS_VERSION $NDDEJS_VERSION
+ENV NODEJS_VERSION $NODEJS_VERSION
 
 CMD ["sleep", "infinity"]
 WORKDIR /var/www/html
@@ -24,7 +24,8 @@ RUN apt-get update && apt-get install -y \
     zip \
  && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sL https://deb.nodesource.com/setup_${NDDEJS_VERSION}.x | sudo bash -
+ENV NODEJS_VERSION_URL=https://deb.nodesource.com/setup_${NODEJS_VERSION}.x
+RUN curl -sL "$NODEJS_VERSION_URL" | sudo bash -
 RUN apt-get install -y nodejs
 
 # Install gulp & bower

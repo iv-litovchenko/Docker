@@ -39,8 +39,8 @@ services:
       dockerfile: .docker/Dockerfile-nodejs
       context: .
       args:
-        - PROJECT_PUBLIC_PATH=${PROJECT_PUBLIC_PATH}
-        - NDDEJS_VERSION=${NDDEJS_VERSION}
+        PROJECT_PUBLIC_PATH: ${PROJECT_PUBLIC_PATH}
+        NODEJS_VERSION: ${NODEJS_VERSION}
     volumes:
       - '.:/var/www/html'
     ports:
