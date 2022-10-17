@@ -32,7 +32,7 @@ services:
 #      - './projects/${PROJECT_NAME}:/var/www/html'
 #    ports:
 #      - '90${PORT}0:80'
-
+#
 #  nodejs:
 #    container_name: nodejs
 #    build:
@@ -45,7 +45,7 @@ services:
 #      - '.:/var/www/html'
 #    ports:
 #      - '70${PORT}1:80'
-
+#
 #  db-mysql:
 #    container_name: db-mysql
 #    image: mysql:latest
@@ -109,7 +109,7 @@ services:
 #    image: redis:latest
 #    ports:
 #      - '70${PORT}4:6379'
-
+#
 #  mailhog:
 #    image: 'mailhog/mailhog:latest'
 #    ports:
