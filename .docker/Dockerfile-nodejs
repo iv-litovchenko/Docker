@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
     zip \
  && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sL https://deb.nodesource.com/setup_${NDDEJS_VERSION:16}.x | sudo bash -
+RUN curl -sL https://deb.nodesource.com/setup_${NDDEJS_VERSION}.x | sudo bash -
 RUN apt-get install -y nodejs
 
 # Install gulp & bower

@@ -1,7 +1,7 @@
 ARG PROJECT_PUBLIC_PATH
 ARG PHP_VERSION
 
-FROM php:${PHP_VERSION:8.0}-apache
+FROM php:${PHP_VERSION}-apache
 
 WORKDIR /var/www/html
 RUN groupadd --gid 1000 project
@@ -36,8 +36,8 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Устанавливаем путь к обработке папки "public"
-RUN sed -ri -e 's!/var/www/html!/var/www/html/${PROJECT_PUBLIC_PATH:public}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/html!/var/www/html/${PROJECT_PUBLIC_PATH:public}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN sed -ri -e 's!/var/www/html!/var/www/html/${PROJECT_PUBLIC_PATH}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/html!/var/www/html/${PROJECT_PUBLIC_PATH}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 RUN a2enmod rewrite headers
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" || true
