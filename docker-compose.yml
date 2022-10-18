@@ -14,7 +14,7 @@ services:
       - '.docker/conf/php.ini:/usr/local/etc/php/conf.d/php.ini'
       - './projects/${PROJECT_NAME}:/var/www/html'
     ports:
-      - '80${PORT}0:80'
+      - '80${PORT}:80'
 
   web-wordpress:
     container_name: web-wordpress
@@ -31,7 +31,7 @@ services:
     volumes:
       - './projects/${PROJECT_NAME}:/var/www/html'
     ports:
-      - '90${PORT}0:80'
+      - '90${PORT}:80'
 
   nodejs:
     container_name: nodejs
@@ -44,7 +44,7 @@ services:
     volumes:
       - '.:/var/www/html'
     ports:
-      - '70${PORT}1:80'
+      - '71${PORT}:80'
 
   db-mysql:
     container_name: db-mysql
@@ -59,7 +59,7 @@ services:
       - db_data_mysql:/var/lib/mysql
       - './projects/${PROJECT_NAME}/docker-local-db-import/mysql:/docker-entrypoint-initdb.d'
     ports:
-      - '70${PORT}2:3306'
+      - '72${PORT}:3306'
 
   web-phpmyadmin:
     container_name: web-phpmyadmin
@@ -70,7 +70,7 @@ services:
       PMA_PORT: 3306
       UPLOAD_LIMIT: 1000M
     ports:
-      - '50${PORT}1:80'
+      - '51${PORT}:80'
 
   web-adminer:
     container_name: web-adminer
@@ -78,7 +78,7 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: db-mysql
     ports:
-      - '50${PORT}2:8080'
+      - '52${PORT}:8080'
 
   db-postgres:
     container_name: db-postgres
@@ -92,7 +92,7 @@ services:
       - db_data_postgres:/var/lib/postgresql/data
       - './projects/${PROJECT_NAME}/docker-local-db-import/postgresql:/docker-entrypoint-initdb.d'
     ports:
-      - '70${PORT}3:5432'
+      - '73${PORT}:5432'
 
   web-pgadmin:
     container_name: web-pgadmin
@@ -102,13 +102,13 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
-      - '50${PORT}3:80'
+      - '53${PORT}:80'
 
   db-redis:
     container_name: db-redis
     image: redis:latest
     ports:
-      - '70${PORT}4:6379'
+      - '74${PORT}:6379'
 
 #  mailhog:
 #    image: 'mailhog/mailhog:latest'
