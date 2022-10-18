@@ -57,7 +57,6 @@ services:
       - MYSQL_ROOT_PASSWORD=docker_password
     volumes:
       - db_data_mysql:/var/lib/mysql
-      - './projects/${PROJECT_NAME}/docker-local-db-import/mysql:/docker-entrypoint-initdb.d'
     ports:
       - '72${PORT}:3306'
 
@@ -90,7 +89,6 @@ services:
       - PGDATA=/var/lib/postgresql/data
     volumes:
       - db_data_postgres:/var/lib/postgresql/data
-      - './projects/${PROJECT_NAME}/docker-local-db-import/postgresql:/docker-entrypoint-initdb.d'
     ports:
       - '73${PORT}:5432'
 
