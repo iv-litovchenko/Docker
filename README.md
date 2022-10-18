@@ -6,10 +6,10 @@
 - $ [запуск в данной директории] sh .bash/docker-down.sh
 
 ## PHP (APACHE)
-- docker exec -it web-server-apache bash
+- docker exec -it web-server-apache-<PROJECT-NAME> bash
 - http://localhost:80XX/ - php
 
-- docker exec -it web-wordpress bash
+- docker exec -it web-wordpress-<PROJECT-NAME> bash
 - http://localhost:90XX/ - wordpress
 
 ## NODAJS, NPM (gulp, grunt, bower, electron-forge)
@@ -23,5 +23,5 @@
 ## TODO
 - Опрокинуть права в контейнер
 - Все что нужно для работы проекта на локали помечается как: /* ---- DOCKER LOCAL ---- */
-- Общаяя  БД
 - Загрузка актуальной БД
+- Общая БД для справок фрон
