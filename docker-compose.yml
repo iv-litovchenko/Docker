@@ -3,7 +3,7 @@ version: '3.9'
 services:
 
   web-server-apache-php:
-    container_name: web-server-apache-php
+    container_name: 'web-server-apache-php-${PROJECT_NAME}'
     build:
       dockerfile: .docker/Dockerfile-web-server-apache-php
       context: .
@@ -17,7 +17,7 @@ services:
       - '80${PORT}:80'
 
   web-wordpress:
-    container_name: web-wordpress
+    container_name: 'web-wordpress-${PROJECT_NAME}'
     build:
       dockerfile: .docker/Dockerfile-web-wordpress
       context: .
@@ -34,7 +34,7 @@ services:
       - '90${PORT}:80'
 
   nodejs:
-    container_name: nodejs
+    container_name: 'nodejs-${PROJECT_NAME}'
     build:
       dockerfile: .docker/Dockerfile-nodejs
       context: .
@@ -44,10 +44,10 @@ services:
     volumes:
       - '.:/var/www/html'
     ports:
-      - '71${PORT}:80'
+      - '70${PORT}:80'
 
   db-mysql:
-    container_name: db-mysql
+    container_name: 'db-mysql-${PROJECT_NAME}'
     image: mysql:latest
     command: mysqld --default-authentication-plugin=mysql_native_password
     environment:
@@ -58,10 +58,10 @@ services:
     volumes:
       - db_data_mysql:/var/lib/mysql
     ports:
-      - '72${PORT}:3306'
+      - '61${PORT}:3306'
 
   web-phpmyadmin:
-    container_name: web-phpmyadmin
+    container_name: 'web-phpmyadmin-${PROJECT_NAME}'
     image: phpmyadmin/phpmyadmin
     restart: always
     environment:
@@ -72,7 +72,7 @@ services:
       - '51${PORT}:80'
 
   web-adminer:
-    container_name: web-adminer
+    container_name: 'web-adminer-${PROJECT_NAME}'
     image: adminer
     environment:
       ADMINER_DEFAULT_SERVER: db-mysql
@@ -80,7 +80,7 @@ services:
       - '52${PORT}:8080'
 
   db-postgres:
-    container_name: db-postgres
+    container_name: 'db-postgres-${PROJECT_NAME}'
     image: postgres:latest
     environment:
       - POSTGRES_DB=${DB_NAME}
@@ -90,10 +90,10 @@ services:
     volumes:
       - db_data_postgres:/var/lib/postgresql/data
     ports:
-      - '73${PORT}:5432'
+      - '62${PORT}:5432'
 
   web-pgadmin:
-    container_name: web-pgadmin
+    container_name: 'web-pgadmin-${PROJECT_NAME}'
     image: dpage/pgadmin4:latest
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
@@ -103,10 +103,10 @@ services:
       - '53${PORT}:80'
 
   db-redis:
-    container_name: db-redis
+    container_name: 'db-redis-${PROJECT_NAME}'
     image: redis:latest
     ports:
-      - '74${PORT}:6379'
+      - '63${PORT}:6379'
 
 #  mailhog:
 #    image: 'mailhog/mailhog:latest'
@@ -118,6 +118,6 @@ services:
 
 volumes:
   db_data_mysql:
-    name: ${PROJECT_NAME}
+    name: db_data_mysql
   db_data_postgres:
-    name: ${PROJECT_NAME}
+    name: db_data_postgres
