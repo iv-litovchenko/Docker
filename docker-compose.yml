@@ -26,8 +26,8 @@ services:
     environment:
       - WORDPRESS_DB_HOST=db-mysql
       - WORDPRESS_DB_NAME=${DB_NAME}
-      - WORDPRESS_DB_USER=DB_USER
-      - WORDPRESS_DB_PASSWORD=DB_PASSWORD
+      - WORDPRESS_DB_USER=docker_password
+      - WORDPRESS_DB_PASSWORD=docker_password
     volumes:
       - './projects/${PROJECT_NAME}:/var/www/html'
     ports:
