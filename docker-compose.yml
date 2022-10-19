@@ -34,7 +34,7 @@ services:
         PROJECT_PUBLIC_PATH: ${PROJECT_PUBLIC_PATH}
         NODEJS_VERSION: ${NODEJS_VERSION}
     volumes:
-      - '.:/var/www/html'
+      - './projects/${PROJECT_NAME}:/var/www/html'
     ports:
       - '70${PORT}:80'
 
