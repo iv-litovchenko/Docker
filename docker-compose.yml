@@ -21,11 +21,6 @@ services:
       context: .
     stdin_open: true
     tty: true
-    environment:
-      - WORDPRESS_DB_HOST=db-mysql
-      - WORDPRESS_DB_NAME=${DB_NAME}
-      - WORDPRESS_DB_USER=docker_user
-      - WORDPRESS_DB_PASSWORD=docker_password
     volumes:
       - './projects/${PROJECT_NAME}:/var/www/html'
     ports:
@@ -76,6 +71,7 @@ services:
   db-postgres:
     image: postgres:latest
     environment:
+      - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=docker_user
       - POSTGRES_PASSWORD=docker_password
     volumes:
@@ -107,6 +103,6 @@ services:
 
 volumes:
   db_data_mysql:
-    name: 'db-data-mysql-${PROJECT_NAME}'
+    name: 'db-data-mysql-${DB_NAME}'
   db_data_postgres:
-    name: 'db-data-postgres-${PROJECT_NAME}'
+    name: 'db-data-postgres-${DB_NAME}'
