@@ -53,7 +53,7 @@ RUN apt-get update
 RUN apt-get -y upgrade
 
 RUN curl -sL "$NODEJS_VERSION_URL" | sudo bash -
-RUN apt-get install -y nodejs
+RUN apt-get --yes --force-yes install nodejs
 
 # Install gulp & bower
 RUN npm install --global electron-forge
