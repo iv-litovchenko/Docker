@@ -17,6 +17,7 @@ services:
       - '80${PORT}:80'
 
   web-wordpress:
+    profiles: ["wordpress"]
     build:
       dockerfile: .docker/Dockerfile-web-wordpress
       context: .
