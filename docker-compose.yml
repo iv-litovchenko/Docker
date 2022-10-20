@@ -26,18 +26,6 @@ services:
     ports:
       - '90${PORT}:80'
 
-  nodejs:
-    build:
-      dockerfile: .docker/Dockerfile-nodejs
-      context: .
-      args:
-        PROJECT_PUBLIC_PATH: ${PROJECT_PUBLIC_PATH}
-        NODEJS_VERSION: ${NODEJS_VERSION}
-    volumes:
-      - './projects/${PROJECT_NAME}:/var/www/html'
-    ports:
-      - '70${PORT}:80'
-
   db-mysql:
     image: mysql:latest
     command: mysqld --default-authentication-plugin=mysql_native_password --sql_mode=

@@ -1,13 +1,16 @@
 ARG PROJECT_PUBLIC_PATH
 ARG PHP_VERSION
+ARG NODEJS_VERSION
 
 FROM php:${PHP_VERSION}-apache
 
 ARG PROJECT_PUBLIC_PATH
 ARG PHP_VERSION
+ARG NODEJS_VERSION
 
 ENV PROJECT_PUBLIC_PATH $PROJECT_PUBLIC_PATH
 ENV PHP_VERSION $PHP_VERSION
+ENV NODEJS_VERSION $NODEJS_VERSION
 
 WORKDIR /var/www/html
 RUN groupadd --gid 1000 project
@@ -38,6 +41,16 @@ RUN apt-get update && apt-get install -y \
     unzip \
     supervisor \
  && rm -rf /var/lib/apt/lists/*
+
+ENV NODEJS_VERSION_URL=https://deb.nodesource.com/setup_${NODEJS_VERSION}.x
+RUN curl -sL "$NODEJS_VERSION_URL" | sudo bash -
+RUN apt-get install -y nodejs
+
+# Install gulp & bower
+RUN npm install --global electron-forge
+RUN npm install --global gulp
+RUN npm install --global grunt
+RUN npm install --global bower
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
