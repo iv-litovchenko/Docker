@@ -47,8 +47,8 @@ RUN apt-get update && apt-get install -y \
 ENV NODEJS_VERSION_URL=https://deb.nodesource.com/setup_${NODEJS_VERSION}.x
 
 RUN echo 12345
-RUN echo NODEJS_VERSION
-RUN echo NODEJS_VERSION_URL
+RUN echo $NODEJS_VERSION
+RUN echo $NODEJS_VERSION_URL
 
 RUN curl -sL "$NODEJS_VERSION_URL" | sudo bash -
 RUN apt-get install -y nodejs
