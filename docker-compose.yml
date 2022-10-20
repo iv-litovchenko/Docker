@@ -9,6 +9,7 @@ services:
       args:
         PROJECT_PUBLIC_PATH: ${PROJECT_PUBLIC_PATH}
         PHP_VERSION: ${PHP_VERSION}
+        NODEJS_VERSION: ${NODEJS_VERSION}
     volumes:
       - '.docker/conf/php.ini:/usr/local/etc/php/conf.d/php.ini'
       - './projects/${PROJECT_NAME}:/var/www/html'
