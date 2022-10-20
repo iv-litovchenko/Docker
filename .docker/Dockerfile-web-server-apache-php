@@ -50,7 +50,7 @@ RUN echo $NODEJS_VERSION
 RUN echo $NODEJS_VERSION_URL
 
 RUN apt-get update
-RUN apt-get upgrade
+RUN apt-get -y upgrade
 
 RUN curl -sL "$NODEJS_VERSION_URL" | sudo bash -
 RUN apt-get install -y nodejs
