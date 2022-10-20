@@ -12,7 +12,6 @@ ENV PROJECT_PUBLIC_PATH $PROJECT_PUBLIC_PATH
 ENV PHP_VERSION $PHP_VERSION
 ENV NODEJS_VERSION $NODEJS_VERSION
 
-WORKDIR /var/www/html
 RUN groupadd --gid 1000 project
 RUN useradd --uid 1000 --gid project --shell /bin/bash --create-home project
 
