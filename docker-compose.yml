@@ -68,6 +68,7 @@ services:
       - POSTGRES_PASSWORD=docker_password
     volumes:
       - db_data_postgres:/var/lib/postgresql/data
+      - path_to_save_backup:/var/lib/postgresql/backup
     ports:
       - '62${PORT}:5432'
 
