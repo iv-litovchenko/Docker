@@ -55,6 +55,8 @@ services:
     image: adminer
     environment:
       ADMINER_DEFAULT_SERVER: db-mysql
+    volumes:
+      - '.docker/conf/php.ini:/usr/local/etc/php/conf.d/php.ini'
     ports:
       - '52${PORT}:8080'
 
