@@ -71,10 +71,11 @@ RUN a2enmod rewrite headers
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" || true
 
 # Установка расширений PHP
-# RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
-# RUN docker-php-ext-install imap
 # RUN docker-php-ext-install gd
 # RUN docker-php-ext-install bz2
+
+RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
+RUN docker-php-ext-install imap
 
 RUN docker-php-ext-install intl
 RUN docker-php-ext-install iconv
@@ -84,7 +85,6 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql
 RUN docker-php-ext-install zip
 
 # RUN docker-php-ext-install mbstring
-# RUN docker-php-ext-enable mysqli
 # RUN docker-php-ext-enable imap
 # RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
 
