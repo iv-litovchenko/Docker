@@ -61,7 +61,7 @@ services:
       - '52${PORT}:8080'
 
   db-postgres:
-    image: postgres:latest
+    image: postgres:10.1
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=docker_user
