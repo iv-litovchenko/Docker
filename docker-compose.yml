@@ -3,6 +3,7 @@ version: '3.9'
 services:
 
   web-server-apache-php:
+    profiles: ["apache"]
     build:
       dockerfile: .docker/Dockerfile-web-server-apache-php
       context: .
@@ -26,7 +27,7 @@ services:
     volumes:
       - './projects/${PROJECT_NAME}:/var/www/html'
     ports:
-      - '90${PORT}:80'
+      - '80${PORT}:80'
 
   db-mysql:
     image: mysql:latest
