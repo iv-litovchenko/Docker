@@ -82,7 +82,7 @@ services:
     ports:
       - '53${PORT}:80'
 
-  phppgadmin:
+  web-phppgadmin:
     restart: always
     image: dockage/phppgadmin:latest
     ports:
