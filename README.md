@@ -9,7 +9,6 @@
 - docker exec -it web-server-apache-<PROJECT-NAME> bash
 - docker exec -it web-wordpress-<PROJECT-NAME> bash
 - http://localhost:80XX/ - php или wordpress
-- http://localhost:80XX/ - wordpress
 
 ## SERVICES
 - http://localhost:51XX/ - web-phpmyadmin
