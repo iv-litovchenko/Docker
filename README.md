@@ -1,8 +1,8 @@
 # DOCKER FOR ALL PROJECTS
 
 ## BASH DOCKER UP/DOWN
-- $ [запуск в данной директории] docker-compose -f docker-compose-8000.yml up -d --build
-- $ [запуск в данной директории] sh .bash/docker-down.sh
+- $ [запуск в данной директории docker] docker-compose -f docker-compose-8000.yml up -d --build
+- $ [запуск в данной директории docker] sh .bash/docker-down.sh
 - $ [запуск в корне проекта /projects/project1] docker-compose -p <PROJECT FOLDER NAME> -f ../../docker-compose.yml --env-file .env.docker.local up -d --build
 
 ## PHP (APACHE), NODAJS, NPM (gulp, grunt, bower, electron-forge)
