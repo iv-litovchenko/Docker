@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+
+  web-server-localhost-8000:
+    image: php:7.4-apache
+    volumes:
+      - '.docker/conf/php.ini:/usr/local/etc/php/conf.d/php.ini'
+      - './projects:/var/www/html'
+    ports:
+      - '8000:80'
