@@ -32,7 +32,7 @@ ksort($list);
         $project_name = (new dotenv(__DIR__ . '/' . $filename))->load('PROJECT_NAME');
         ?>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            <a href="http://localhost:80<?= $port ?>" style="color: black; text-decoration: none;">[80<?= $port ?>] <?= dirname($filename); ?></a>
+            <a href="http://localhost:80<?= $port ?>/?t=<?=time();?>" style="color: black; text-decoration: none;">[80<?= $port ?>] <?= dirname($filename); ?></a>
             <span class="badge bg-primary rounded-pill">
                 <a href="http://localhost:51<?= $port ?>" style="color: white; text-decoration: none;">phpmyadmin</a> |
                 <a href="http://localhost:52<?= $port ?>" style="color: white; text-decoration: none;">adminer</a> |
