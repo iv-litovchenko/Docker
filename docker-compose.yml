@@ -16,6 +16,7 @@ services:
       - './projects/${PROJECT_NAME}:/var/www/html'
     ports:
       - '80${PORT}:80'
+      - '90${PORT}:443'
 
   web-wordpress:
     profiles: ["wordpress"]
@@ -28,6 +29,7 @@ services:
       - './projects/${PROJECT_NAME}:/var/www/html'
     ports:
       - '80${PORT}:80'
+      - '90${PORT}:443'
 
   db-mysql:
     image: mysql:latest
