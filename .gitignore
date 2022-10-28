@@ -2,6 +2,7 @@
 /packages
 /public_html
 /projects/*/
+/projects-db-dumps/*.sql
 /vendor
 .bash_history
 .env
