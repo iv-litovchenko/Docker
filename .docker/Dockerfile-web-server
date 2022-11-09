@@ -2,7 +2,7 @@ ARG PROJECT_PUBLIC_PATH
 ARG PHP_VERSION
 ARG NODEJS_VERSION
 
-FROM php:${PHP_VERSION}-apache
+FROM ${PHP_VERSION}
 
 ARG PROJECT_PUBLIC_PATH
 ARG PHP_VERSION
@@ -49,17 +49,17 @@ RUN a2enmod rewrite
 RUN a2ensite default-ssl
 RUN a2enmod ssl
 
-ENV NODEJS_VERSION_URL=https://deb.nodesource.com/setup_${NODEJS_VERSION}.x
-
-RUN echo 12345
-RUN echo $NODEJS_VERSION
-RUN echo $NODEJS_VERSION_URL
-
 RUN apt-get update
 RUN apt-get -y upgrade
 
+ENV NODEJS_VERSION_URL=https://deb.nodesource.com/setup_${NODEJS_VERSION}.x
+
+RUN echo $NODEJS_VERSION
+RUN echo $NODEJS_VERSION_URL
+
 RUN curl -sL "$NODEJS_VERSION_URL" | sudo bash -
 RUN apt-get --yes --force-yes install nodejs
+RUN apt-get -y install npm
 
 # Install gulp & bower
 RUN npm install --global electron-forge

@@ -20,6 +20,8 @@ foreach (glob("*/.env.docker.local") as $filename) {
     $list[$port] = $filename;
 }
 ksort($list);
+#print $dockerContent;
+#exit();
 ?>
 
 <h2 style="padding-top: 15%;" align="center">Локальная разработка проектов</h2>

@@ -1,6 +1,0 @@
-FROM wordpress:latest
-
-RUN groupadd --gid 1000 project
-RUN useradd --uid 1000 --gid project --shell /bin/bash --create-home project
-
-EXPOSE 80
