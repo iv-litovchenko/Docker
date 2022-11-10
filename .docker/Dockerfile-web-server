@@ -14,8 +14,8 @@ ENV NODEJS_VERSION $NODEJS_VERSION
 
 WORKDIR /var/www/html
 
-RUN groupadd --gid 1000 project
-RUN useradd --uid 1000 --gid project --shell /bin/bash --create-home project
+# RUN groupadd --gid 1000 project
+# RUN useradd --uid 1000 --gid project --shell /bin/bash --create-home project
 # RUN usermod -u ${USER_ID} www-data && groupmod -g ${GROUP_ID} www-data
 # RUN chown -R www-data:www-data ../uploads
 # RUN groupadd --gid 1000 www-data && \
@@ -23,6 +23,11 @@ RUN useradd --uid 1000 --gid project --shell /bin/bash --create-home project
 #     usermod --shell /bin/bash www-data && \
 #     usermod -d /var/www/html www-data
 #     usermod --create-home /var/www/html
+
+RUN groupmod -g 1000 www-data && \
+    usermod -u 1000 -g 1000 www-data &&\
+    usermod --shell /bin/bash www-data && \
+    usermod -d /var/www/html www-data
 
 # Установка программ и утилит
 RUN apt-get update && apt-get install -y \
