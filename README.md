@@ -1,9 +1,8 @@
 # DOCKER FOR ALL PROJECTS
 
 ## BASH DOCKER UP/DOWN
-- $ [запуск в данной директории docker] docker-compose up -d --build
-- $ [запуск в данной директории docker] sh .bash/docker-down.sh
-# - $ [запуск в данной директории docker] docker-compose -p <PROJECT FOLDER NAME> --env-file projects/<PROJECT FOLDER NAME>/ .env.docker.local -f docker-compose-project.yml up -d --build
+- $ [запуск в данной директории docker] docker-compose up -d --build (запустить localhost:8000 - список всех проектов)
+- $ [запуск в данной директории docker] sh .bash/docker-down.sh (остановить все контейнеры)
 
 ## PHP (APACHE), NODAJS, NPM (gulp, grunt, bower, electron-forge)
 - docker exec -it web-server-<PROJECT-NAME> bash
@@ -18,3 +17,6 @@
 ## TODO
 - Все что нужно для работы проекта на локали помечается как: /* ---- DOCKER LOCAL ---- */
 - Загрузка актуальной БД
+- Опрокинуть права в контейнер
+- short open tag (php.ini)
+- проблема с БД - давая логин и пароль для входа мы даем доступ к продакшину

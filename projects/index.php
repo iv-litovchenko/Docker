@@ -14,52 +14,102 @@
 
 <?php
 require('dotenv.php');
-$list = [];
-foreach (glob("*/.env.docker.local") as $filename) {
-    $port = (new dotenv(__DIR__ . '/' . $filename))->load('PORT');
-    $list[$port] = $filename;
-}
-ksort($list);
+
+// $list = [];
+// foreach (glob("*/") as $filename) {
+//     $port = (new dotenv(__DIR__ . '/' . $filename))->load('PORT');
+//     $list[$port] = $filename;
+// }
+// ksort($list);
+
+$list = file_get_contents('http://ilitovfa.beget.tech/docker-api/');
+$list = json_decode($list, true);
 #print $dockerContent;
 #exit();
+
 ?>
 
-<h2 style="padding-top: 15%;" align="center">Локальная разработка проектов</h2>
+<h2 align="center" style="margin-top: 100px;">Локальная разработка проектов</h2>
 
-<table class="table table-bordered table-striped" style="width: auto; margin: 0 auto; padding-bottom: 15%;">
+<table class="table table-bordered table-striped" style="width: 50%; margin: 0 auto; margin-bottom: 100px;">
     <thead>
     <tr>
+        <th>#</th>
         <th>Порт</th>
-        <th colspan="2" align="center">URL</th>
+        <th align="center">URL</th>
         <th>Проект</th>
         <th colspan="3">Сервисы</th>
-        <th colspan="3">Команды</th>
+        <th>GitLab</th>
+        <th>Prod.Puth</th>
+        <th>Adminka</th>
+        <th>DB.Import</th>
+        <th>Команды</th>
     </tr>
     </thead>
     <tbody>
     <?php
-    foreach ($list as $filename) {
-        $port = (new dotenv(__DIR__ . '/' . $filename))->load('PORT');
-        $project_name = (new dotenv(__DIR__ . '/' . $filename))->load('PROJECT_NAME');
+    foreach ($list as $row) {
+        #$port = (new dotenv(__DIR__ . '/' . $filename))->load('PORT');
+        #$project_name = (new dotenv(__DIR__ . '/' . $filename))->load('PROJECT_NAME');
+
+        $vars = [];
+        $vars['PROJECT_NAME'] = $row['PROJECT_NAME'];
+        $vars['PROJECT_PUBLIC_PATH'] = $row['PROJECT_PUBLIC_PATH'];
+        $vars['PHP_VERSION'] = $row['PHP_VERSION'];
+        $vars['NODEJS_VERSION'] = $row['NODEJS_VERSION'];
+        $vars['PROJECT_NAME'] = $row['PROJECT_NAME'];
+        $vars['PORT'] = $row['PORT'];
+        $vars['DB_NAME'] = $row['DB_NAME'];
+        # $vars['DB_CHARSET'] = $row[''];
+        # $vars['DB_COLLATE'] = $row[''];
+
+        $commandList = [];
+        foreach($vars as $k => $v){
+            $commandList[] = " export " . $k . "='" . $v . "' ";
+        }
+
+        // docker-compose -p <PROJECT FOLDER NAME> --env-file projects/<PROJECT FOLDER NAME>/ .env.docker.local -f docker-compose-project.yml up -d --build
+        $commandList = implode(" && " , $commandList);
+        $commandUp = $commandList . ' && docker-compose -p "project-bitza-auto" -f ../../docker-compose-project.yml up -d ';
+        $commandDown = $commandList . ' && docker-compose -p "project-bitza-auto" -f docker-compose-project.yml down ';
         ?>
         <tr>
-            <td>[80<?= $port ?>]</td>
-            <td><a href="http://localhost:80<?= $port ?>/?t=<?= time(); ?>">http</a></td>
-            <td><a href="https://localhost:90<?= $port ?>/?t=<?= time(); ?>">https</a></td>
-            <td><?= dirname($filename); ?></td>
-            <td><a href="http://localhost:51<?= $port ?>">phpmyadmin</a></td>
-            <td><a href="http://localhost:52<?= $port ?>">adminer</a></td>
-            <td><a href="http://localhost:53<?= $port ?>">pgadmin</a></td>
+            <td style="background: <?php if (file_exists($row['PROJECT_NAME'] . '/')) { echo 'green'; } else { echo 'red'; } ?>">
+                &nbsp;
+            </td>
+            <td>[X0<?= $row['PORT'] ?>]</td>
             <td>
-                <button type="button" class="btn btn-primary btn-sm">
+                <a href="http://localhost:80<?= $row['PORT'] ?>/?t=<?= time(); ?>">http</a> |
+                <a href="https://localhost:90<?= $row['PORT'] ?>/?t=<?= time(); ?>">https</a>
+            </td>
+            <td><?= $row['PROJECT_NAME']; ?></td>
+            <td><a href="http://localhost:51<?= $row['PORT'] ?>">phpmyadmin</a></td>
+            <td><a href="http://localhost:52<?= $row['PORT'] ?>">adminer</a></td>
+            <td><a href="http://localhost:53<?= $row['PORT'] ?>">pgadmin</a></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td nowrap>
+                <button type="button" class="btn btn-primary btn-sm" onclick="alert(1);">
                     <span class="glyphicon glyphicon-play"></span> Start
                 </button>
-            </td>
-            <td>
                 <button type="button" class="btn btn-primary btn-sm">
                     <span class="glyphicon glyphicon-play"></span> Stop
                 </button>
+                <button type="button" class="btn btn-primary btn-sm">
+                    <span class="glyphicon glyphicon-play"></span> Doc
+                </button>
             </td>
+        </tr>
+        <tr>
+            <td colspan="12"><?= nl2br($row['DOCUMENTATION']) ?></td>
+        </tr>
+        <tr>
+            <td colspan="12"><?=$commandUp;?></td>
+        </tr>
+        <tr>
+            <td colspan="12"><?=$commandDown;?></td>
         </tr>
         <?php
     }
