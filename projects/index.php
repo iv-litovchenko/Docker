@@ -78,7 +78,7 @@ $list = json_decode($list, true);
                 &nbsp;
             </td>
             <td>[X0<?= $row['PORT'] ?>]</td>
-            <td>
+            <td nowrap>
                 <a href="http://localhost:80<?= $row['PORT'] ?>/?t=<?= time(); ?>">http</a> |
                 <a href="https://localhost:90<?= $row['PORT'] ?>/?t=<?= time(); ?>">https</a>
             </td>
@@ -91,25 +91,71 @@ $list = json_decode($list, true);
             <td></td>
             <td></td>
             <td nowrap>
-                <button type="button" class="btn btn-primary btn-sm" onclick="alert(1);">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStart_<?=$row['id'];?>">
                     <span class="glyphicon glyphicon-play"></span> Start
                 </button>
-                <button type="button" class="btn btn-primary btn-sm">
+                <!-- Modal -->
+                <div class="modal fade" id="modalStart_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalStartLabel_<?=$row['id'];?>" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalStartLabel_<?=$row['id'];?>">Документация</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Данную команду выполнить в корне проекта
+                                <pre><?=$commandUp;?></pre>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStop_<?=$row['id'];?>">
                     <span class="glyphicon glyphicon-play"></span> Stop
                 </button>
-                <button type="button" class="btn btn-primary btn-sm">
+                <!-- Modal -->
+                <div class="modal fade" id="modalStop_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalStopLabel_<?=$row['id'];?>" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalStopLabel_<?=$row['id'];?>">Документация</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Данную команду выполнить в корне проекта
+                                <pre><?=$commandDown;?></pre>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDoc_<?=$row['id'];?>">
                     <span class="glyphicon glyphicon-play"></span> Doc
                 </button>
+                <!-- Modal -->
+                <div class="modal fade" id="modalDoc_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalDocLabel_<?=$row['id'];?>" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalDocLabel_<?=$row['id'];?>">Документация</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <?= nl2br($row['DOCUMENTATION']) ?>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </td>
-        </tr>
-        <tr>
-            <td colspan="12"><?= nl2br($row['DOCUMENTATION']) ?></td>
-        </tr>
-        <tr>
-            <td colspan="12"><?=$commandUp;?></td>
-        </tr>
-        <tr>
-            <td colspan="12"><?=$commandDown;?></td>
         </tr>
         <?php
     }
@@ -119,4 +165,3 @@ $list = json_decode($list, true);
 
 </body>
 </html>
-
