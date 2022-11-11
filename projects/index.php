@@ -135,6 +135,10 @@ $list = json_decode($list, true);
                     </div>
                 </div>
 
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDockerExec_<?=$row['id'];?>">
+                    <span class="glyphicon glyphicon-play"></span> Docker Exec
+                </button>
+
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDoc_<?=$row['id'];?>">
                     <span class="glyphicon glyphicon-play"></span> Doc
                 </button>
