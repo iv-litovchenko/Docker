@@ -71,7 +71,6 @@ RUN echo $NODEJS_VERSION_URL
 
 RUN curl -sL "$NODEJS_VERSION_URL" | sudo bash -
 RUN apt-get --yes --force-yes install nodejs
-RUN apt-get -y install npm
 
 # Install gulp & bower
 RUN npm install --global electron-forge
