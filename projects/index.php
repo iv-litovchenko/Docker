@@ -104,7 +104,6 @@ $list = json_decode($list, true);
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                Данную команду выполнить в корне проекта
                                 <pre><?=$commandUp;?></pre>
                             </div>
                             <div class="modal-footer">
@@ -126,7 +125,6 @@ $list = json_decode($list, true);
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                Данную команду выполнить в корне проекта
                                 <pre><?=$commandDown;?></pre>
                             </div>
                             <div class="modal-footer">
@@ -148,8 +146,7 @@ $list = json_decode($list, true);
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                Данную команду выполнить в корне проекта
-                                <pre>docker exec -it <?=$row['PROJECT_NAME']?>_web-server_1 bash</pre>
+                                <pre>cd ~/Desktop/docker/projects/".$row['PROJECT_NAME']." && docker exec -it <?=$row['PROJECT_NAME']?>_web-server_1 bash</pre>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
