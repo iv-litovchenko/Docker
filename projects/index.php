@@ -71,8 +71,8 @@ $list = json_decode($list, true);
 
         // docker-compose -p <PROJECT FOLDER NAME> --env-file projects/<PROJECT FOLDER NAME>/ .env.docker.local -f docker-compose-project.yml up -d --build
         $commandList = implode(" && " , $commandList);
-        $commandUp = $commandList . ' && docker-compose -p "bitza-auto" -f ../../docker-compose-project.yml up -d ';
-        $commandDown = $commandList . ' && docker-compose -p "bitza-auto" -f docker-compose-project.yml down ';
+        $commandUp = $commandList . ' && docker-compose -p "'. $row['PROJECT_NAME'] .'" -f ../../docker-compose-project.yml up -d ';
+        $commandDown = $commandList . ' && docker-compose -p "'. $row['PROJECT_NAME'] .'" -f docker-compose-project.yml down ';
         ?>
         <tr>
             <td style="background: <?php if (file_exists($row['PROJECT_NAME'] . '/')) { echo 'green'; } else { echo 'red'; } ?>">
