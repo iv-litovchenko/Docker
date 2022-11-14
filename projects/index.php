@@ -139,6 +139,24 @@ $list = json_decode($list, true);
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDockerExec_<?=$row['id'];?>">
                     <span class="glyphicon glyphicon-play"></span> Docker Exec
                 </button>
+                <!-- Modal -->
+                <div class="modal fade" id="modalStop_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalDockerExec_<?=$row['id'];?>" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalDockerExecLabel_<?=$row['id'];?>">Документация</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Данную команду выполнить в корне проекта
+                                <pre>docker exec -it <?=$row['PROJECT_NAME']?>_web-server_1 bash</pre>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDoc_<?=$row['id'];?>">
                     <span class="glyphicon glyphicon-play"></span> Doc
