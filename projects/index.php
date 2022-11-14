@@ -177,6 +177,13 @@ $list = json_decode($list, true);
                 </div>
             </td>
         </tr>
+        <tr>
+        <td colspan="12">
+            <pre style="margin: 0;">
+docker stop $(docker ps -a -q) # остановить все процессы
+docker rm $(docker ps -a -q) # удалить все процессы</pre>
+        </td>
+        </tr>
         <?php
     }
     ?>
