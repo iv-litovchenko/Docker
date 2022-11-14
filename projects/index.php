@@ -64,7 +64,7 @@ $list = json_decode($list, true);
         # $vars['DB_COLLATE'] = $row[''];
 
         $commandList = [];
-        $commandList[] = " cd ~/Desktop/docker && ";
+        $commandList[] = " cd ~/Desktop/docker/projects/".$row['PROJECT_NAME']." ";
         foreach($vars as $k => $v){
             $commandList[] = " export " . $k . "='" . $v . "' ";
         }
