@@ -140,7 +140,7 @@ $list = json_decode($list, true);
                     <span class="glyphicon glyphicon-play"></span> Docker Exec
                 </button>
                 <!-- Modal -->
-                <div class="modal fade" id="modalStop_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalDockerExec_<?=$row['id'];?>" aria-hidden="true">
+                <div class="modal fade" id="modalDockerExec_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalDockerExecLabel_<?=$row['id'];?>" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
