@@ -104,7 +104,7 @@ $list = json_decode($list, true);
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalStartLabel_<?=$row['id'];?>">Документация</h5>
+                                <h5 class="modal-title" id="modalStartLabel_<?=$row['id'];?>">Поднять контейнер</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -125,7 +125,7 @@ $list = json_decode($list, true);
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalStopLabel_<?=$row['id'];?>">Документация</h5>
+                                <h5 class="modal-title" id="modalStopLabel_<?=$row['id'];?>">Опустить контейнер</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -146,7 +146,7 @@ $list = json_decode($list, true);
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalDockerExecLabel_<?=$row['id'];?>">Документация</h5>
+                                <h5 class="modal-title" id="modalDockerExecLabel_<?=$row['id'];?>">Провалиться в контейнер проекта</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
