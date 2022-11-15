@@ -49,7 +49,9 @@ $list = json_decode($list, true);
     <tbody>
     <tr>
         <td colspan="12">
-            <pre style="margin: 0; color: red;">При работе внутри контейнера нужно переключиться на пользователя "su www-data"</pre>
+            <pre style="margin: 0; color: red;">При работе внутри контейнера нужно переключиться на пользователя "su www-data"
+В PHP-приходит переменная "DOCKER_PROJECT_ENV: local", по ней мождно определить среду работы проекта на локали
+            </pre>
         </td>
     </tr>
     <?php
