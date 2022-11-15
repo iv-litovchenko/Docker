@@ -49,7 +49,7 @@ $list = json_decode($list, true);
     <tbody>
     <tr>
         <td colspan="12">
-            <pre style="margin: 0; color: red;"><!--При работе внутри контейнера нужно переключиться на пользователя "su www-data"--></pre>
+            <pre style="margin: 0; color: red;">При работе внутри контейнера нужно переключиться на пользователя "su www-data"</pre>
         </td>
     </tr>
     <?php
