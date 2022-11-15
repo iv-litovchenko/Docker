@@ -13,6 +13,7 @@ services:
         DOCKER_PROJECT_PHP_VERSION: ${DOCKER_PROJECT_PHP_VERSION}
         DOCKER_PROJECT_NODEJS_VERSION: ${DOCKER_PROJECT_NODEJS_VERSION}
         DOCKER_PROJECT_ENV: 'local'
+    # env_file: './projects/.env.variables'
     stdin_open: true
     tty: true
     volumes:
