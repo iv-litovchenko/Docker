@@ -47,6 +47,11 @@ $list = json_decode($list, true);
     </tr>
     </thead>
     <tbody>
+    <tr>
+        <td colspan="12">
+            <pre style="margin: 0; color: red;">При работе внутри контейнера нужно переключиться на пользователя "su www-data"</pre>
+        </td>
+    </tr>
     <?php
     foreach ($list as $row) {
         #$port = (new dotenv(__DIR__ . '/' . $filename))->load('PORT');
