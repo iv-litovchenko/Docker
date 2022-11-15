@@ -58,40 +58,39 @@ $list = json_decode($list, true);
         #$project_name = (new dotenv(__DIR__ . '/' . $filename))->load('PROJECT_NAME');
 
         $vars = [];
-        $vars['PROJECT_NAME'] = $row['PROJECT_NAME'];
-        $vars['PROJECT_PUBLIC_PATH'] = $row['PROJECT_PUBLIC_PATH'];
-        $vars['PHP_VERSION'] = $row['PHP_VERSION'];
-        $vars['NODEJS_VERSION'] = $row['NODEJS_VERSION'];
-        $vars['PROJECT_NAME'] = $row['PROJECT_NAME'];
-        $vars['PORT'] = $row['PORT'];
-        $vars['DB_NAME'] = $row['DB_NAME'];
+        $vars['DOCKER_PROJECT_NAME'] = $row['DOCKER_PROJECT_NAME'];
+        $vars['DOCKER_PROJECT_PUBLIC_PATH'] = $row['DOCKER_PROJECT_PUBLIC_PATH'];
+        $vars['DOCKER_PROJECT_PHP_VERSION'] = $row['DOCKER_PROJECT_PHP_VERSION'];
+        $vars['DOCKER_PROJECT_NODEJS_VERSION'] = $row['DOCKER_PROJECT_NODEJS_VERSION'];
+        $vars['DOCKER_PROJECT_PORT'] = $row['DOCKER_PROJECT_PORT'];
+        $vars['DOCKER_PROJECT_DB_NAME'] = $row['DOCKER_PROJECT_DB_NAME'];
         # $vars['DB_CHARSET'] = $row[''];
         # $vars['DB_COLLATE'] = $row[''];
 
         $commandList = [];
-        $commandList[] = " cd ~/Desktop/docker/projects/".$row['PROJECT_NAME']." ";
+        $commandList[] = " cd ~/Desktop/docker/projects/".$row['DOCKER_PROJECT_NAME']." ";
         foreach($vars as $k => $v){
             $commandList[] = " export " . $k . "='" . $v . "' ";
         }
 
         // docker-compose -p <PROJECT FOLDER NAME> --env-file projects/<PROJECT FOLDER NAME>/ .env.docker.local -f docker-compose-project.yml up -d --build
         $commandList = implode(" && " , $commandList);
-        $commandUp = $commandList . ' && docker-compose -p "'. $row['PROJECT_NAME'] .'" -f ../../docker-compose-project.yml up -d ';
-        $commandDown = $commandList . ' && docker-compose -p "'. $row['PROJECT_NAME'] .'" -f docker-compose-project.yml down ';
+        $commandUp = $commandList . ' && docker-compose -p "'. $row['DOCKER_PROJECT_NAME'] .'" -f ../../docker-compose-project.yml up -d ';
+        $commandDown = $commandList . ' && docker-compose -p "'. $row['DOCKER_PROJECT_NAME'] .'" -f docker-compose-project.yml down ';
         ?>
         <tr>
-            <td style="background: <?php if (file_exists($row['PROJECT_NAME'] . '/')) { echo 'green'; } else { echo 'red'; } ?>">
+            <td style="background: <?php if (file_exists($row['DOCKER_PROJECT_NAME'] . '/')) { echo 'green'; } else { echo 'red'; } ?>">
                 &nbsp;
             </td>
-            <td>[X0<?= $row['PORT'] ?>]</td>
+            <td>[X0<?= $row['DOCKER_PROJECT_PORT'] ?>]</td>
             <td nowrap>
-                <a href="http://localhost:80<?= $row['PORT'] ?>/?t=<?= time(); ?>">http</a> |
-                <a href="https://localhost:90<?= $row['PORT'] ?>/?t=<?= time(); ?>">https</a>
+                <a href="http://localhost:80<?= $row['DOCKER_PROJECT_PORT'] ?>/?t=<?= time(); ?>">http</a> |
+                <a href="https://localhost:90<?= $row['DOCKER_PROJECT_PORT'] ?>/?t=<?= time(); ?>">https</a>
             </td>
-            <td><?= $row['PROJECT_NAME']; ?></td>
-            <td><a href="http://localhost:51<?= $row['PORT'] ?>">phpmyadmin</a></td>
-            <td><a href="http://localhost:52<?= $row['PORT'] ?>">adminer</a></td>
-            <td><a href="http://localhost:53<?= $row['PORT'] ?>">pgadmin</a></td>
+            <td><?= $row['DOCKER_PROJECT_NAME']; ?></td>
+            <td><a href="http://localhost:51<?= $row['DOCKER_PROJECT_PORT'] ?>">phpmyadmin</a></td>
+            <td><a href="http://localhost:52<?= $row['DOCKER_PROJECT_PORT'] ?>">adminer</a></td>
+            <td><a href="http://localhost:53<?= $row['DOCKER_PROJECT_PORT'] ?>">pgadmin</a></td>
             <td></td>
             <td></td>
             <td></td>
@@ -151,7 +150,7 @@ $list = json_decode($list, true);
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <pre>cd ~/Desktop/docker/projects/<?=$row['PROJECT_NAME']?> && docker exec -it --user www-data <?=$row['PROJECT_NAME']?>_web-server_1 bash</pre>
+                                <pre>cd ~/Desktop/docker/projects/<?=$row['DOCKER_PROJECT_NAME']?> && docker exec -it --user www-data <?=$row['DOCKER_PROJECT_NAME']?>_web-server_1 bash</pre>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>

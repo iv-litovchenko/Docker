@@ -1,16 +1,19 @@
-ARG PROJECT_PUBLIC_PATH
-ARG PHP_VERSION
-ARG NODEJS_VERSION
+ARG DOCKER_PROJECT_PUBLIC_PATH
+ARG DOCKER_PROJECT_PHP_VERSION
+ARG DOCKER_PROJECT_NODEJS_VERSION
+ARG DOCKER_PROJECT_ENV
 
-FROM ${PHP_VERSION}
+FROM ${DOCKER_PROJECT_PHP_VERSION}
 
-ARG PROJECT_PUBLIC_PATH
-ARG PHP_VERSION
-ARG NODEJS_VERSION
+ARG DOCKER_PROJECT_PUBLIC_PATH
+ARG DOCKER_PROJECT_PHP_VERSION
+ARG DOCKER_PROJECT_NODEJS_VERSION
+ARG DOCKER_PROJECT_ENV
 
-ENV PROJECT_PUBLIC_PATH $PROJECT_PUBLIC_PATH
-ENV PHP_VERSION $PHP_VERSION
-ENV NODEJS_VERSION $NODEJS_VERSION
+ENV DOCKER_PROJECT_PUBLIC_PATH $DOCKER_PROJECT_PUBLIC_PATH
+ENV DOCKER_PROJECT_PHP_VERSION $DOCKER_PROJECT_PHP_VERSION
+ENV DOCKER_PROJECT_NODEJS_VERSION $DOCKER_PROJECT_NODEJS_VERSION
+ENV DOCKER_PROJECT_ENV $DOCKER_PROJECT_ENV
 
 WORKDIR /var/www/html
 
@@ -64,12 +67,12 @@ RUN a2enmod ssl
 RUN apt-get update
 RUN apt-get -y upgrade
 
-ENV NODEJS_VERSION_URL=https://deb.nodesource.com/setup_${NODEJS_VERSION}.x
+ENV DOCKER_PROJECT_NODEJS_VERSION_URL=https://deb.nodesource.com/setup_${DOCKER_PROJECT_NODEJS_VERSION}.x
 
-RUN echo $NODEJS_VERSION
-RUN echo $NODEJS_VERSION_URL
+RUN echo $DOCKER_PROJECT_NODEJS_VERSION
+RUN echo $DOCKER_PROJECT_NODEJS_VERSION_URL
 
-RUN curl -sL "$NODEJS_VERSION_URL" | sudo bash -
+RUN curl -sL "$DOCKER_PROJECT_NODEJS_VERSION_URL" | sudo bash -
 RUN apt-get --yes --force-yes install nodejs
 
 # Install gulp & bower
@@ -82,8 +85,8 @@ RUN npm install --global less
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Устанавливаем путь к обработке папки "public"
-RUN sed -ri -e 's!/var/www/html!/var/www/html/${PROJECT_PUBLIC_PATH}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/html!/var/www/html/${PROJECT_PUBLIC_PATH}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN sed -ri -e 's!/var/www/html!/var/www/html/${DOCKER_PROJECT_PUBLIC_PATH}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/html!/var/www/html/${DOCKER_PROJECT_PUBLIC_PATH}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 RUN a2enmod rewrite headers
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" || true
