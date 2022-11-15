@@ -49,7 +49,7 @@ $list = json_decode($list, true);
     <tbody>
     <tr>
         <td colspan="12">
-            <pre style="margin: 0; color: red;">При работе внутри контейнера нужно переключиться на пользователя "su www-data"</pre>
+            <pre style="margin: 0; color: red;"><!--При работе внутри контейнера нужно переключиться на пользователя "su www-data"--></pre>
         </td>
     </tr>
     <?php
@@ -151,7 +151,7 @@ $list = json_decode($list, true);
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <pre>cd ~/Desktop/docker/projects/<?=$row['PROJECT_NAME']?> && docker exec -it <?=$row['PROJECT_NAME']?>_web-server_1 bash</pre>
+                                <pre>cd ~/Desktop/docker/projects/<?=$row['PROJECT_NAME']?> && docker exec -it --user www-data <?=$row['PROJECT_NAME']?>_web-server_1 bash</pre>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
