@@ -1,0 +1,14 @@
+FROM php:5.6-apache
+
+WORKDIR /var/www/html
+
+RUN groupmod -g 1000 www-data && \
+    usermod -u 1000 -g 1000 www-data &&\
+    usermod --shell /bin/bash www-data && \
+    usermod -d /var/www/html www-data
+
+# Установка программ и утилит
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+ && rm -rf /var/lib/apt/lists/*
