@@ -3,7 +3,9 @@ version: '3.9'
 services:
 
   web-server-localhost-8000:
-    image: php:7.4-apache
+    build:
+      dockerfile: .docker/Dockerfile-web-server-8000
+      context: .
     volumes:
       - '.docker/conf/php.ini:/usr/local/etc/php/conf.d/php.ini'
       - './projects:/var/www/html'
