@@ -16,7 +16,6 @@
 - Загрузка актуальной БД
 - short open tag (php.ini)
 - проблема с БД - давая логин и пароль для входа мы даем доступ к продакшину
-- Переименовать проект в Docker с большой буквы
 - zip -r project_2022_18_11.zip projectfolder
 - https://phpdocker.io/
 
