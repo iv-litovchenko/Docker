@@ -70,7 +70,7 @@ $list = json_decode($list, true);
         # $vars['DB_COLLATE'] = $row[''];
 
         $commandList = [];
-        $commandList[] = " cd ~/Desktop/docker/projects/".$row['DOCKER_PROJECT_NAME']." ";
+        $commandList[] = " cd ~/Desktop/Docker/projects/".$row['DOCKER_PROJECT_NAME']." ";
         foreach($vars as $k => $v){
             $commandList[] = " export " . $k . "='" . $v . "' ";
         }
@@ -152,7 +152,7 @@ $list = json_decode($list, true);
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <pre>cd ~/Desktop/docker/projects/<?=$row['DOCKER_PROJECT_NAME']?> && docker exec -it --user www-data <?=$row['DOCKER_PROJECT_NAME']?>_web-server_1 bash</pre>
+                                <pre>cd ~/Desktop/Docker/projects/<?=$row['DOCKER_PROJECT_NAME']?> && docker exec -it --user www-data <?=$row['DOCKER_PROJECT_NAME']?>_web-server_1 bash</pre>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
