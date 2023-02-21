@@ -7,13 +7,39 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="./jquery.tablesort.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('table').tablesort().data('tablesort');
+        });
+    </script>
     <style type="text/css">
+        th {
+            cursor: pointer;
+        }
+        th.no-sort,
+        th.no-sort:hover {
+            cursor: not-allowed;
+        }
+
+        th.sorted.ascending:after {
+            content: "  \2191";
+        }
+
+        th.sorted.descending:after {
+            content: " \2193";
+        }
     </style>
 </head>
 <body>
 
 <?php
 require('dotenv.php');
+
+function editIcon($title, $table, $id)
+{
+    return '<a class="btn btn-primary btn-sm" href="http://ilitovfa.beget.tech/adminer-4.8.1-monitoring.php?server=localhost&username=ilitovfa_monitor&db=ilitovfa_monitor&edit='.strval($table).'&where[id]='.intval($id).'">'.$title.'</a>';
+}
 
 // $list = [];
 // foreach (glob("*/") as $filename) {
@@ -23,6 +49,10 @@ require('dotenv.php');
 // ksort($list);
 
 $list = file_get_contents('http://ilitovfa.beget.tech/docker-api/');
+if(empty($list)) {
+
+}
+
 $list = json_decode($list, true);
 #print $dockerContent;
 #exit();
@@ -39,16 +69,18 @@ $list = json_decode($list, true);
         <th align="center">URL</th>
         <th>Проект</th>
         <th colspan="3">Сервисы</th>
-        <th>GitLab</th>
-        <th>Prod.Puth</th>
-        <th>Adminka</th>
-        <th>DB.Import</th>
+        <th><img src="./icon-cms.png" width="20"></th>
+        <th><img src="./icon-ssh-server-path.png" width="20"></th>
+        <th><img src="./icon-gitlab.png" width="20"></th>
+        <th><img src="./icon-adminpanel.png" width="20"></th>
+        <th>DB</th>
+        <th>Ci/Cd</th>
         <th>Команды</th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td colspan="12">
+    <tr class="no-sort">
+        <td colspan="14">
             <pre style="margin: 0; color: red;">При работе внутри контейнера нужно переключиться на пользователя "su www-data"
 В PHP-приходит переменная "DOCKER_PROJECT_ENV: local", по ней мождно определить среду работы проекта на локали
 Все что нужно для работы проекта на локали помечается как: /* ---- DOCKER LOCAL ---- */</pre>
@@ -84,17 +116,46 @@ $list = json_decode($list, true);
             <td style="background: <?php if (file_exists($row['DOCKER_PROJECT_NAME'] . '/')) { echo 'green'; } else { echo 'red'; } ?>">
                 &nbsp;
             </td>
-            <td>[X0<?= $row['DOCKER_PROJECT_PORT'] ?>]</td>
+            <td><?=editIcon('[X0'.$row['DOCKER_PROJECT_PORT'].']', 'docker_projects', $row['id']);?></td>
             <td nowrap>
                 <a href="http://localhost:80<?= $row['DOCKER_PROJECT_PORT'] ?>/?t=<?= time(); ?>">http</a> |
                 <a href="https://localhost:90<?= $row['DOCKER_PROJECT_PORT'] ?>/?t=<?= time(); ?>">https</a>
             </td>
-            <td><?= $row['DOCKER_PROJECT_NAME']; ?></td>
+            <td nowrap><?= $row['DOCKER_PROJECT_NAME']; ?></td>
             <td><a href="http://localhost:51<?= $row['DOCKER_PROJECT_PORT'] ?>">phpmyadmin</a></td>
             <td><a href="http://localhost:52<?= $row['DOCKER_PROJECT_PORT'] ?>">adminer</a></td>
             <td><a href="http://localhost:53<?= $row['DOCKER_PROJECT_PORT'] ?>">pgadmin</a></td>
-            <td></td>
-            <td></td>
+            <td>
+                <?php
+                if (!empty($row['INFO_SERVER_PATH'])) {
+                    ?> <button type="button" class="btn btn-primary btn-sm"><?= htmlspecialchars($row['INFO_Framework']); ?></button> <?
+                }
+                ?>
+            </td>
+            <td>
+                <?php
+                if (!empty($row['INFO_SERVER_PATH'])) {
+                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./icon-ssh-server-path.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_SERVER_PATH']); ?>')"
+                            data-bs-toggle="tooltip" title="SSH - путь на сервере"></button> <?php
+                }
+                ?>
+            </td>
+            <td>
+                <?php
+                if (!empty($row['INFO_GITLAB'])) {
+                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./icon-gitlab.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_GITLAB']); ?>')"
+                            data-bs-toggle="tooltip" title="Ссылка на gitlab.com"></button> <?php
+                }
+                ?>
+            </td>
+            <td>
+                <?php
+                if (!empty($row['INFO_ADMIN_PANEL'])) {
+                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./icon-adminpanel.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_ADMIN_PANEL']); ?>')"
+                            data-bs-toggle="tooltip" title="Ссылка на панель управления сайтом"></button> <?php
+                }
+                ?>
+            </td>
             <td></td>
             <td></td>
             <td nowrap>
@@ -187,7 +248,7 @@ $list = json_decode($list, true);
     }
     ?>
     <tr>
-        <td colspan="12">
+        <td colspan="14" class="no-sort">
             <pre style="margin: 0;">
 docker stop $(docker ps -a -q) # остановить все процессы
 docker rm $(docker ps -a -q) # удалить все процессы</pre>
