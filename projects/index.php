@@ -41,6 +41,16 @@ function editIcon($title, $table, $id)
     return '<a class="btn btn-primary btn-sm" href="http://ilitovfa.beget.tech/adminer-4.8.1-monitoring.php?server=localhost&username=ilitovfa_monitor&db=ilitovfa_monitor&edit='.strval($table).'&where[id]='.intval($id).'">'.$title.'</a>';
 }
 
+function get_readme_md($name) {
+    if(file_exists($name.'/readme.md')){
+        return nl2br(file_get_contents($name.'/readme.md'));
+    }
+    if(file_exists($name.'/README.md')){
+        return nl2br(file_get_contents($name.'/README.md'));
+    }
+    return "-";
+}
+
 // $list = [];
 // foreach (glob("*/") as $filename) {
 //     $port = (new dotenv(__DIR__ . '/' . $filename))->load('PORT');
@@ -223,7 +233,7 @@ $list = json_decode($list, true);
                 </div>
 
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDoc_<?=$row['id'];?>">
-                    <span class="glyphicon glyphicon-play"></span> Doc
+                    <span class="glyphicon glyphicon-play"></span> Doc (readme.md)
                 </button>
                 <!-- Modal -->
                 <div class="modal fade" id="modalDoc_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalDocLabel_<?=$row['id'];?>" aria-hidden="true">
@@ -234,7 +244,7 @@ $list = json_decode($list, true);
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <?= nl2br($row['DOCUMENTATION']) ?>
+                                <?= get_readme_md($row['DOCKER_PROJECT_NAME']) ?>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
