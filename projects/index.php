@@ -186,7 +186,7 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
             <td></td>
             <td></td>
             <td nowrap>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStart_<?=$row['id'];?>">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStart_<?=$row['DOCKER_PROJECT_PORT'];?>">
                     <span class="glyphicon glyphicon-play"></span> Start
                 </button>
                 <!-- Modal -->
