@@ -1,12 +1,9 @@
-/node_modules
-/packages
-/public_html
 /projects/*/
+!/projects/.assets/
+
 /projects-db-dumps/*.sql
-/vendor
+
 .bash_history
-.env
 /.idea
 /.vscode
-/.docker-data
 /.tmp
