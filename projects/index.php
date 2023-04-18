@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="./jquery.tablesort.js"></script>
+    <script src="./.assets/jquery.tablesort.js"></script>
     <script>
         $(document).ready(function () {
             $('table').tablesort().data('tablesort');
@@ -58,12 +58,12 @@ function get_readme_md($name) {
 // }
 // ksort($list);
 
-$list = file_get_contents('http://ilitovfa.beget.tech/docker-api/');
-if(empty($list)) {
+// $list = file_get_contents('http://ilitovfa.beget.tech/docker-api/');
+// if(empty($list)) {
 
-}
+// }
 
-$list = json_decode($list, true);
+// $list = json_decode($list, true);
 #print $dockerContent;
 #exit();
 
@@ -79,10 +79,10 @@ $list = json_decode($list, true);
         <th align="center">URL</th>
         <th>Проект</th>
         <th colspan="3">Сервисы</th>
-        <th><img src="./icon-cms.png" width="20"></th>
-        <th><img src="./icon-ssh-server-path.png" width="20"></th>
-        <th><img src="./icon-gitlab.png" width="20"></th>
-        <th><img src="./icon-adminpanel.png" width="20"></th>
+        <th><img src="./.assets/icon-cms.png" width="20"></th>
+        <th><img src="./.assets/icon-ssh-server-path.png" width="20"></th>
+        <th><img src="./.assets/icon-gitlab.png" width="20"></th>
+        <th><img src="./.assets/icon-adminpanel.png" width="20"></th>
         <th>DB</th>
         <th>Ci/Cd</th>
         <th>Команды</th>
@@ -93,11 +93,29 @@ $list = json_decode($list, true);
         <td colspan="14">
             <pre style="margin: 0; color: red;">При работе внутри контейнера нужно переключиться на пользователя "su www-data"
 В PHP-приходит переменная "DOCKER_PROJECT_ENV: local", по ней мождно определить среду работы проекта на локали
-Все что нужно для работы проекта на локали помечается как: /* ---- DOCKER LOCAL ---- */</pre>
+Все что нужно для работы проекта на локали помечается как: /* ---- DOCKER LOCAL ---- */
+
+/* ---- DOCKER LOCAL (example) // как отличить продакшин от локальной разработки ---- */
+if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
+    $db['default']['hostname'] = 'host.docker.internal:6103'; // db-mysql
+    $db['default']['username'] = 'root';
+    $db['default']['password'] = 'docker_password';
+    $db['default']['database'] = 'spravkyfront';
+} else {
+    $db['default']['hostname'] = 'localhost';
+    $db['default']['username'] = '';
+    $db['default']['password'] = '';
+    $db['default']['database'] = '';
+}
+</pre>
         </td>
     </tr>
     <?php
-    foreach ($list as $row) {
+    $rows = array_map('str_getcsv', file('db.csv'));
+    $header = array_shift($rows);
+    foreach ($rows as $data) {
+        $row = array_combine($header, $data);
+
         #$port = (new dotenv(__DIR__ . '/' . $filename))->load('PORT');
         #$project_name = (new dotenv(__DIR__ . '/' . $filename))->load('PROJECT_NAME');
 
@@ -107,7 +125,7 @@ $list = json_decode($list, true);
         $vars['DOCKER_PROJECT_PHP_VERSION'] = $row['DOCKER_PROJECT_PHP_VERSION'];
         $vars['DOCKER_PROJECT_NODEJS_VERSION'] = $row['DOCKER_PROJECT_NODEJS_VERSION'];
         $vars['DOCKER_PROJECT_PORT'] = $row['DOCKER_PROJECT_PORT'];
-        $vars['DOCKER_PROJECT_DB_NAME'] = $row['DOCKER_PROJECT_DB_NAME'];
+        $vars['DOCKER_PROJECT_NAME'] = $row['DOCKER_PROJECT_NAME'];
         # $vars['DB_CHARSET'] = $row[''];
         # $vars['DB_COLLATE'] = $row[''];
 
@@ -126,7 +144,7 @@ $list = json_decode($list, true);
             <td style="background: <?php if (file_exists($row['DOCKER_PROJECT_NAME'] . '/')) { echo 'green'; } else { echo 'red'; } ?>">
                 &nbsp;
             </td>
-            <td><?=editIcon('[X0'.$row['DOCKER_PROJECT_PORT'].']', 'docker_projects', $row['id']);?></td>
+            <td><?=$row['DOCKER_PROJECT_PORT'];?></td>
             <td nowrap>
                 <a href="http://localhost:80<?= $row['DOCKER_PROJECT_PORT'] ?>/?t=<?= time(); ?>">http</a> |
                 <a href="https://localhost:90<?= $row['DOCKER_PROJECT_PORT'] ?>/?t=<?= time(); ?>">https</a>
@@ -137,15 +155,14 @@ $list = json_decode($list, true);
             <td><a href="http://localhost:53<?= $row['DOCKER_PROJECT_PORT'] ?>">pgadmin</a></td>
             <td>
                 <?php
-                if (!empty($row['INFO_SERVER_PATH'])) {
-                    ?> <button type="button" class="btn btn-primary btn-sm"><?= htmlspecialchars($row['INFO_Framework']); ?></button> <?
-                }
+                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./.assets/icon-cms.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_COMMENT']); ?>')"
+                                                                                 data-bs-toggle="tooltip" title="SSH - путь на сервере"></button> <?php
                 ?>
             </td>
             <td>
                 <?php
                 if (!empty($row['INFO_SERVER_PATH'])) {
-                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./icon-ssh-server-path.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_SERVER_PATH']); ?>')"
+                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./.assets/icon-ssh-server-path.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_SERVER_PATH']); ?>')"
                             data-bs-toggle="tooltip" title="SSH - путь на сервере"></button> <?php
                 }
                 ?>
@@ -153,7 +170,7 @@ $list = json_decode($list, true);
             <td>
                 <?php
                 if (!empty($row['INFO_GITLAB'])) {
-                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./icon-gitlab.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_GITLAB']); ?>')"
+                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./.assets/icon-gitlab.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_GITLAB']); ?>')"
                             data-bs-toggle="tooltip" title="Ссылка на gitlab.com"></button> <?php
                 }
                 ?>
@@ -161,7 +178,7 @@ $list = json_decode($list, true);
             <td>
                 <?php
                 if (!empty($row['INFO_ADMIN_PANEL'])) {
-                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./icon-adminpanel.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_ADMIN_PANEL']); ?>')"
+                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./.assets/icon-adminpanel.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_ADMIN_PANEL']); ?>')"
                             data-bs-toggle="tooltip" title="Ссылка на панель управления сайтом"></button> <?php
                 }
                 ?>
@@ -173,11 +190,11 @@ $list = json_decode($list, true);
                     <span class="glyphicon glyphicon-play"></span> Start
                 </button>
                 <!-- Modal -->
-                <div class="modal fade" id="modalStart_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalStartLabel_<?=$row['id'];?>" aria-hidden="true">
+                <div class="modal fade" id="modalStart_<?=$row['DOCKER_PROJECT_PORT'];?>" tabindex="-1" aria-labelledby="modalStartLabel_<?=$row['DOCKER_PROJECT_PORT'];?>" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalStartLabel_<?=$row['id'];?>">Поднять контейнер</h5>
+                                <h5 class="modal-title" id="modalStartLabel_<?=$row['DOCKER_PROJECT_PORT'];?>">Поднять контейнер</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -190,15 +207,15 @@ $list = json_decode($list, true);
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStop_<?=$row['id'];?>">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStop_<?=$row['DOCKER_PROJECT_PORT'];?>">
                     <span class="glyphicon glyphicon-play"></span> Stop
                 </button>
                 <!-- Modal -->
-                <div class="modal fade" id="modalStop_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalStopLabel_<?=$row['id'];?>" aria-hidden="true">
+                <div class="modal fade" id="modalStop_<?=$row['DOCKER_PROJECT_PORT'];?>" tabindex="-1" aria-labelledby="modalStopLabel_<?=$row['DOCKER_PROJECT_PORT'];?>" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalStopLabel_<?=$row['id'];?>">Опустить контейнер</h5>
+                                <h5 class="modal-title" id="modalStopLabel_<?=$row['DOCKER_PROJECT_PORT'];?>">Опустить контейнер</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -211,15 +228,15 @@ $list = json_decode($list, true);
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDockerExec_<?=$row['id'];?>">
-                    <span class="glyphicon glyphicon-play"></span> Docker Exec
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDockerExec_<?=$row['DOCKER_PROJECT_PORT'];?>">
+                    <span class="glyphicon glyphicon-play"></span> Exec
                 </button>
                 <!-- Modal -->
-                <div class="modal fade" id="modalDockerExec_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalDockerExecLabel_<?=$row['id'];?>" aria-hidden="true">
+                <div class="modal fade" id="modalDockerExec_<?=$row['DOCKER_PROJECT_PORT'];?>" tabindex="-1" aria-labelledby="modalDockerExecLabel_<?=$row['DOCKER_PROJECT_PORT'];?>" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalDockerExecLabel_<?=$row['id'];?>">Провалиться в контейнер проекта</h5>
+                                <h5 class="modal-title" id="modalDockerExecLabel_<?=$row['DOCKER_PROJECT_PORT'];?>">Провалиться в контейнер проекта</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -232,15 +249,15 @@ $list = json_decode($list, true);
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDoc_<?=$row['id'];?>">
-                    <span class="glyphicon glyphicon-play"></span> Doc (readme.md)
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDoc_<?=$row['DOCKER_PROJECT_PORT'];?>">
+                    <span class="glyphicon glyphicon-play"></span> Doc.md
                 </button>
                 <!-- Modal -->
-                <div class="modal fade" id="modalDoc_<?=$row['id'];?>" tabindex="-1" aria-labelledby="modalDocLabel_<?=$row['id'];?>" aria-hidden="true">
+                <div class="modal fade" id="modalDoc_<?=$row['DOCKER_PROJECT_PORT'];?>" tabindex="-1" aria-labelledby="modalDocLabel_<?=$row['DOCKER_PROJECT_PORT'];?>" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalDocLabel_<?=$row['id'];?>">Документация</h5>
+                                <h5 class="modal-title" id="modalDocLabel_<?=$row['DOCKER_PROJECT_PORT'];?>">Документация</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
