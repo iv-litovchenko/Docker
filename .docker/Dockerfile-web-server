@@ -1,32 +1,23 @@
-ARG DOCKER_PROJECT_PUBLIC_PATH
-ARG DOCKER_PROJECT_PHP_VERSION
-ARG DOCKER_PROJECT_NODEJS_VERSION
+ARG DP_PUBLIC_PATH
+ARG PHP_IMAGE
+ARG NODEJS_IMAGE
 ARG DOCKER_PROJECT_ENV
 
-FROM ${DOCKER_PROJECT_PHP_VERSION}
+FROM ${PHP_IMAGE}
 
-ARG DOCKER_PROJECT_PUBLIC_PATH
-ARG DOCKER_PROJECT_PHP_VERSION
-ARG DOCKER_PROJECT_NODEJS_VERSION
+ARG DP_PUBLIC_PATH
+ARG PHP_IMAGE
+ARG NODEJS_IMAGE
 ARG DOCKER_PROJECT_ENV
 
-ENV DOCKER_PROJECT_PUBLIC_PATH $DOCKER_PROJECT_PUBLIC_PATH
-ENV DOCKER_PROJECT_PHP_VERSION $DOCKER_PROJECT_PHP_VERSION
-ENV DOCKER_PROJECT_NODEJS_VERSION $DOCKER_PROJECT_NODEJS_VERSION
+ENV DP_PUBLIC_PATH $DP_PUBLIC_PATH
+ENV PHP_IMAGE $PHP_IMAGE
+ENV NODEJS_IMAGE $NODEJS_IMAGE
 ENV DOCKER_PROJECT_ENV $DOCKER_PROJECT_ENV
 
 WORKDIR /var/www/html
 
-# RUN groupadd --gid 1000 project
-# RUN useradd --uid 1000 --gid project --shell /bin/bash --create-home project
-# RUN usermod -u ${USER_ID} www-data && groupmod -g ${GROUP_ID} www-data
-# RUN chown -R www-data:www-data ../uploads
-# RUN groupadd --gid 1000 www-data && \
-#     usermod -u 1000 -g 1000 www-data && \
-#     usermod --shell /bin/bash www-data && \
-#     usermod -d /var/www/html www-data
-#     usermod --create-home /var/www/html
-
+# Установка прав доступа (linux ubuntu)
 RUN groupmod -g 1000 www-data && \
     usermod -u 1000 -g 1000 www-data &&\
     usermod --shell /bin/bash www-data && \
@@ -61,6 +52,7 @@ RUN apt-get update && apt-get install -y \
  && rm -rf /var/lib/apt/lists/*
 
 # https://www.marco.zone/official-docker-php-apache-https
+# SSL 443
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/ssl-cert-snakeoil.key -out /etc/ssl/certs/ssl-cert-snakeoil.pem -subj "/C=AT/ST=Vienna/L=Vienna/O=Security/OU=Development/CN=example.com"
 RUN a2enmod rewrite
 RUN a2ensite default-ssl
@@ -69,26 +61,27 @@ RUN a2enmod ssl
 RUN apt-get update
 RUN apt-get -y upgrade
 
-ENV DOCKER_PROJECT_NODEJS_VERSION_URL=https://deb.nodesource.com/setup_${DOCKER_PROJECT_NODEJS_VERSION}.x
+# ENV NODEJS_IMAGE_URL=https://deb.nodesource.com/setup_${NODEJS_IMAGE}.x
 
-RUN echo $DOCKER_PROJECT_NODEJS_VERSION
-RUN echo $DOCKER_PROJECT_NODEJS_VERSION_URL
+# RUN echo $NODEJS_IMAGE
+# RUN echo $NODEJS_IMAGE_URL
 
-RUN curl -sL "$DOCKER_PROJECT_NODEJS_VERSION_URL" | sudo bash -
-RUN apt-get --yes --force-yes install nodejs
+# RUN curl -sL "$NODEJS_IMAGE_URL" | sudo bash -
+# RUN apt-get --yes --force-yes install nodejs
 
 # Install gulp & bower
-RUN npm install --global electron-forge
-RUN npm install --global gulp
-RUN npm install --global grunt
-RUN npm install --global bower
-RUN npm install --global less
+# RUN npm install --global electron-forge
+# RUN npm install --global gulp
+# RUN npm install --global grunt
+# RUN npm install --global bower
+# RUN npm install --global less
+# RUN npm install --global sass
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Устанавливаем путь к обработке папки "public"
-RUN sed -ri -e 's!/var/www/html!/var/www/html/${DOCKER_PROJECT_PUBLIC_PATH}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/html!/var/www/html/${DOCKER_PROJECT_PUBLIC_PATH}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN sed -ri -e 's!/var/www/html!/var/www/html/${DP_PUBLIC_PATH}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/html!/var/www/html/${DP_PUBLIC_PATH}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 RUN a2enmod rewrite headers
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" || true
@@ -113,12 +106,6 @@ RUN docker-php-ext-install zip
 # RUN docker-php-ext-install mbstring
 # RUN docker-php-ext-enable imap
 # RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
-
-# COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-# ARG uid
-# RUN useradd -G www-data,root -u $uid -d /home/devuser devuser
-# RUN mkdir -p /home/devuser/.composer && \
-#    chown -R devuser:devuser /home/devuser
 
 # Set storage to writable
 # COPY . /var/www/html/

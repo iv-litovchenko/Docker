@@ -9,19 +9,18 @@ services:
       dockerfile: .docker/Dockerfile-web-server
       context: .
       args:
-        DOCKER_PROJECT_PUBLIC_PATH: ${DOCKER_PROJECT_PUBLIC_PATH}
-        DOCKER_PROJECT_PHP_VERSION: ${DOCKER_PROJECT_PHP_VERSION}
-        DOCKER_PROJECT_NODEJS_VERSION: ${DOCKER_PROJECT_NODEJS_VERSION}
+        DP_PUBLIC_PATH: ${DP_PUBLIC_PATH}
+        PHP_IMAGE: ${PHP_IMAGE}
+        NODEJS_IMAGE: ${NODEJS_IMAGE}
         DOCKER_PROJECT_ENV: 'local'
     # env_file: './projects/.env.variables'
     stdin_open: true
     tty: true
     volumes:
       - '.docker/conf/php.ini:/usr/local/etc/php/conf.d/php.ini'
-      - './projects/${DOCKER_PROJECT_NAME}:/var/www/html'
+      - './projects/${DP_NAME}:/var/www/html'
     ports:
-      - '80${DOCKER_PROJECT_PORT}:80'
-      - '90${DOCKER_PROJECT_PORT}:443'
+      - '80${DP_PORT}:${DP_PORT_SSL}'
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -29,81 +28,49 @@ services:
     image: mysql:latest
     command: mysqld --default-authentication-plugin=mysql_native_password --sql_mode=
     environment:
-      - MYSQL_DATABASE=${DOCKER_PROJECT_NAME}
+      - MYSQL_DATABASE=${DP_NAME}
       - MYSQL_USER=docker_user
       - MYSQL_PASSWORD=docker_password
       - MYSQL_ROOT_PASSWORD=docker_password
     volumes:
       - db_data_mysql:/var/lib/mysql
+      - db_data_mysql_backup:/docker-entrypoint-initdb.d
     ports:
-      - '61${DOCKER_PROJECT_PORT}:3306'
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-  web-phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    restart: always
-    environment:
-      PMA_HOST: db-mysql
-      PMA_PORT: 3306
-      UPLOAD_LIMIT: 1000M
-    ports:
-      - '51${DOCKER_PROJECT_PORT}:80'
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-  web-adminer:
-    image: adminer
-    environment:
-      ADMINER_DEFAULT_SERVER: db-mysql
-    volumes:
-      - '.docker/conf/php.ini:/usr/local/etc/php/conf.d/php.ini'
-    ports:
-      - '52${DOCKER_PROJECT_PORT}:8080'
+      - '61${DP_PORT}:3306'
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
   db-postgres:
-    image: postgres:10.1
+    image: postgres:latest
     environment:
-      - POSTGRES_DB=${DOCKER_PROJECT_NAME}
+      - POSTGRES_DB=${DP_NAME}
       - POSTGRES_USER=docker_user
       - POSTGRES_PASSWORD=docker_password
     volumes:
       - db_data_postgres:/var/lib/postgresql/data
       - db_data_postgres_backup:/var/lib/postgresql/backup
     ports:
-      - '62${DOCKER_PROJECT_PORT}:5432'
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-  web-pgadmin:
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
-      PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    ports:
-      - '53${DOCKER_PROJECT_PORT}:80'
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-  web-phppgadmin:
-    restart: always
-    image: dockage/phppgadmin:latest
-    ports:
-      - '54${DOCKER_PROJECT_PORT}:80'
-    environment:
-      - PHP_PG_ADMIN_SERVER_HOST=db-postgres
-      - PHP_PG_ADMIN_SERVER_PG_DUMP_PATH=/usr/bin/pg_dump
-      - PHP_PG_ADMIN_SERVER_PG_DUMPALL_PATH=/usr/bin/pg_dumpall
+      - '62${DP_PORT}:5432'
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
   db-redis:
     image: redis:latest
+    environment:
+      - REDIS_PASSWORD=docker_password
     ports:
-      - '63${DOCKER_PROJECT_PORT}:6379'
+      - '63${DP_PORT}:6379'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  db-memcached:
+    image: 'memcached:latest'
+    environment:
+      - MEMCACHED_MAX_CONNECTIONS=2000
+      - MEMCACHED_USERNAME=docker_user
+      - MEMCACHED_PASSWORD=docker_password
+    ports:
+      - "64${DP_PORT}:11211"
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -112,16 +79,93 @@ services:
 #    ports:
 #      - '${FORWARD_MAILHOG_PORT:-1025}:1025'
 #      - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
-#    networks:
-#      - projects
+
+#
+#    mailhog:
+#      image: 'mailhog/mailhog:latest'
+#      ports:
+#        - '32001:8025'
+
+  # service | MyAdmin | http://localhost:51XX
+  web-phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db-mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 1000M
+    ports:
+      - '51${DP_PORT}:80'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # service | Adminer | http://localhost:52XX
+  web-adminer:
+    image: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: db-mysql
+    volumes:
+      - '.docker/conf/php.ini:/usr/local/etc/php/conf.d/php.ini'
+    ports:
+      - '52${DP_PORT}:8080'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # service | PGAdmin(1) | http://localhost:53XX
+  web-pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - '53${DP_PORT}:80'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # service | PGAdmin(2) | http://localhost:54XX
+  web-phppgadmin:
+    image: dockage/phppgadmin:latest
+    ports:
+      - '54${DP_PORT}:80'
+    environment:
+      - PHP_PG_ADMIN_SERVER_HOST=db-postgres
+      - PHP_PG_ADMIN_SERVER_PG_DUMP_PATH=/usr/bin/pg_dump
+      - PHP_PG_ADMIN_SERVER_PG_DUMPALL_PATH=/usr/bin/pg_dumpall
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # service | REDIS | http://localhost:55XX
+  web-phpredisadmin:
+    image: erikdubbelboer/phpredisadmin:latest
+    environment:
+      - REDIS_1_HOST=db-redis
+      - REDIS_1_PORT=6379
+      - ADMIN_USER=docker_user
+      - ADMIN_PASS=docker_password
+    ports:
+      - '55${DP_PORT}:80'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # service | Memcached | http://localhost:56XX
+  web-memcached-admin:
+    image: hatamiarash7/memcached-admin:latest
+    environment:
+      - MEMCACHED_HOST=db-memcached
+      - MEMCACHED_PORT=11211
+    ports:
+      - '56${DP_PORT}:80'
 
 volumes:
   db_data_mysql:
-    name: 'db-data-mysql-${DOCKER_PROJECT_NAME}'
+    name: 'db-data-mysql-${DP_NAME}'
+  db_data_mysql_backup:
+    name: 'db-data-mysql-backup-${DP_NAME}'
   db_data_postgres:
-    name: 'db-data-postgres-${DOCKER_PROJECT_NAME}'
+    name: 'db-data-postgres-${DP_NAME}'
   db_data_postgres_backup:
-    name: 'db-data-postgres-backup-${DOCKER_PROJECT_NAME}'
+    name: 'db-data-postgres-backup-${DP_NAME}'
 
 #networks:
 #  projects:

@@ -8,6 +8,6 @@ services:
       context: .
     volumes:
       - '.docker/conf/php.ini:/usr/local/etc/php/conf.d/php.ini'
-      - './projects:/var/www/html'
+      - './:/var/www/html'
     ports:
       - '8000:80'
