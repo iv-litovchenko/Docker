@@ -1,5 +1,5 @@
 /projects/*/
-!/projects/.assets/
+!/projects/test/
 
 /projects-db-dumps/*.sql
 
