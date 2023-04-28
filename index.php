@@ -75,17 +75,17 @@ function get_readme_md($name) {
 <table class="table table-bordered table-striped" style="width: 50%; margin: 0 auto; margin-bottom: 100px;">
     <thead>
     <tr>
-        <th>#</th>
         <th>Порт</th>
         <th>Проект</th>
-        <th>Сервисы</th>
         <th><img src="./resources/assets/icon-cms.png" width="20"></th>
         <th><img src="./resources/assets/icon-ssh-server-path.png" width="20"></th>
         <th><img src="./resources/assets/icon-gitlab.png" width="20"></th>
         <th><img src="./resources/assets/icon-adminpanel.png" width="20"></th>
+        <th>Сервисы</th>
         <th>DB</th>
         <th>Ci/Cd</th>
-        <th>Команды</th>
+        <th>Docker-команды</th>
+        <th>Документация</th>
     </tr>
     </thead>
     <tbody>
@@ -142,17 +142,43 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
         $commandDown = $commandList . ' && docker-compose -p "'. $row['DP_NAME'] .'" -f ../../docker-compose-project.yml --env-file ../.env.variables down ';
         ?>
         <tr>
-            <td style="background: <?php if (file_exists('projects/' . $row['DP_NAME'] . '/')) { echo 'green'; } else { echo 'red'; } ?>">
-                   &nbsp;
-            </td>
             <td><?=$row['DP_PORT'];?></td>
             <td nowrap>
                 <a
-                        style="width: 100%;"
                         type="button"
-                        class="btn btn-primary btn-sm"
+                        class="btn btn-<?php if (file_exists('projects/' . $row['DP_NAME'] . '/')) { echo 'success'; } else { echo 'danger'; } ?> btn-sm w-100"
                         href="http://localhost:80<?= $row['DP_PORT'] < 10 ? '0' . $row['DP_PORT'] : $row['DP_PORT'] ?>/?t=<?= time(); ?>"
                 ><?= $row['DP_NAME']; ?></a>
+            </td>
+            <td nowrap>
+                <?php
+                ?> <button type="button" class="btn btn-primary btn-sm w-100"><img src="./resources/assets/icon-cms.png" width="20"
+                                                                             data-bs-toggle="tooltip" title="Информация"> <?= htmlspecialchars($row['INFO_COMMENT']); ?></button> <?php
+                ?>
+            </td>
+            <td>
+                <?php
+                if (!empty($row['INFO_SERVER_PATH'])) {
+                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./resources/assets/icon-ssh-server-path.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_SERVER_PATH']); ?>')"
+                                                                                 data-bs-toggle="tooltip" title="SSH - путь на сервере"></button> <?php
+                }
+                ?>
+            </td>
+            <td>
+                <?php
+                if (!empty($row['INFO_GITLAB'])) {
+                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./resources/assets/icon-gitlab.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_GITLAB']); ?>')"
+                                                                                 data-bs-toggle="tooltip" title="Ссылка на gitlab.com"></button> <?php
+                }
+                ?>
+            </td>
+            <td>
+                <?php
+                if (!empty($row['INFO_ADMIN_PANEL'])) {
+                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./resources/assets/icon-adminpanel.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_ADMIN_PANEL']); ?>')"
+                                                                                 data-bs-toggle="tooltip" title="Ссылка на панель управления сайтом"></button> <?php
+                }
+                ?>
             </td>
             <td nowrap>
                 <?php
@@ -163,44 +189,54 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
                     $strContent = str_pad($count, 2, 0, STR_PAD_LEFT).". ".$line;
                     if(strstr($strContent, '# service')) {
                         $strContentExplode = explode('|', $strContent);
-                        print "<a href='" . str_replace('XX', $row['DP_PORT'], $strContentExplode[2]) . "'>" . $strContentExplode[1] . "</a>";
-                        print " | ";
+                        print "<a type='button' class='btn btn-primary btn-sm' 
+                                href='" . str_replace('XX', $row['DP_PORT'] < 10 ? '0' . $row['DP_PORT'] : $row['DP_PORT'], $strContentExplode[2]) . "'
+                                data-bs-toggle='tooltip'
+                                title='" . $strContentExplode[1] . "'
+                        ><img src='./resources/assets/icon-service.png' width='20'></a>";
+                        print " "; // |
                     }
                 }
                 ?>
             </td>
-            <td>
-                <?php
-                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./resources/assets/icon-cms.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_COMMENT']); ?>')"
-                                                                                 data-bs-toggle="tooltip" title="SSH - путь на сервере"></button> <?php
-                ?>
+            <td nowrap>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDbImport_<?=$row['DP_PORT'];?>">
+                    <span class="glyphicon glyphicon-play"></span> DB Import
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="modalDbImport_<?=$row['DP_PORT'];?>" tabindex="-1" aria-labelledby="modalDbImportLabel_<?=$row['DP_PORT'];?>" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalStopLabel_<?=$row['DP_PORT'];?>">Импорт БД</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <?php
+                                foreach (glob("projects/" . $row['DP_NAME'] . "/.dbdumb/*/*") as $filename) {
+                                    $driver = end(explode("/", dirname($filename)));
+                                    switch($driver) {
+                                        case 'mysql':
+                                            print 'mysql -u root -p docker_password '. $row['DP_NAME'] .' < '.basename($filename);
+                                            print '|' . date("d-m-Y H:i:s.", filectime($filename));
+                                            break;
+                                    }
+                                    print "<br />";
+                                }
+                                ?>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </td>
             <td>
-                <?php
-                if (!empty($row['INFO_SERVER_PATH'])) {
-                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./resources/assets/icon-ssh-server-path.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_SERVER_PATH']); ?>')"
-                            data-bs-toggle="tooltip" title="SSH - путь на сервере"></button> <?php
-                }
-                ?>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDbImport_<?=$row['DP_PORT'];?>">
+                    <span class="glyphicon glyphicon-play"></span> CD/CD
+                </button>
             </td>
-            <td>
-                <?php
-                if (!empty($row['INFO_GITLAB'])) {
-                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./resources/assets/icon-gitlab.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_GITLAB']); ?>')"
-                            data-bs-toggle="tooltip" title="Ссылка на gitlab.com"></button> <?php
-                }
-                ?>
-            </td>
-            <td>
-                <?php
-                if (!empty($row['INFO_ADMIN_PANEL'])) {
-                    ?> <button type="button" class="btn btn-primary btn-sm"><img src="./resources/assets/icon-adminpanel.png" width="20" onclick="alert('<?= htmlspecialchars($row['INFO_ADMIN_PANEL']); ?>')"
-                            data-bs-toggle="tooltip" title="Ссылка на панель управления сайтом"></button> <?php
-                }
-                ?>
-            </td>
-            <td></td>
-            <td></td>
             <td nowrap>
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStart_<?=$row['DP_PORT'];?>">
                     <span class="glyphicon glyphicon-play"></span> Start
@@ -256,7 +292,7 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <pre>cd ~/Desktop/Docker/projects/<?=$row['DP_NAME']?> && docker logs db-redis</pre>
+                                <pre>docker logs db-redis</pre>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -277,7 +313,7 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <pre>cd ~/Desktop/Docker/projects/<?=$row['DP_NAME']?> && docker exec -it --user www-data <?=$row['DP_NAME']?>_web-server_1 bash</pre>
+                                <pre>docker exec -it --user www-data <?=$row['DP_NAME']?>_web-server_1 bash</pre>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -285,9 +321,10 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
                         </div>
                     </div>
                 </div>
-
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDoc_<?=$row['DP_PORT'];?>">
-                    <span class="glyphicon glyphicon-play"></span> Doc.md
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modalDoc_<?=$row['DP_PORT'];?>">
+                    <span class="glyphicon glyphicon-play"></span> Readme.md
                 </button>
                 <!-- Modal -->
                 <div class="modal fade" id="modalDoc_<?=$row['DP_PORT'];?>" tabindex="-1" aria-labelledby="modalDocLabel_<?=$row['DP_PORT'];?>" aria-hidden="true">
