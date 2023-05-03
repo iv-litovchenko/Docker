@@ -70,6 +70,48 @@ function get_readme_md($name) {
 
 ?>
 
+<?php
+if(isset($GLOBALS['_GET']['db-refresh'])){
+    ?>
+
+    <h2 align="center" style="margin-top: 100px;">Обновление БД - ок!</h2>
+
+    <?
+    // $project_name = $GLOBALS['_GET']['db-refresh'];
+    // $last = '10.10.2023.sql';
+    // @mkdir('.temp/'.$project_name);
+    //
+    // // exec
+    // $output=null;
+    // $retval=null;
+    //
+    // // export
+    // $command_1 = '';
+    //
+    // // copy from "Помойка (удаленный диск)"
+    // $command_2 = 'cd ~/Desktop/Docker && smbget smb://192.168.0.234/wd-elements-25a3-1031/DOCKER/DUMPS/'.$project_name.'/'.$last.' -U "anonymouse%" -o .temp/'.$project_name.'/'.$last;
+    // print $command_2 . '<br />';
+    //
+    // // import
+    // $command_3 = 'cd ~/Desktop/Docker && docker exec -i '.$project_name.'_db-mysql_1 mysql -h db-mysql -uroot -pdocker_password '.$project_name.' < .temp/'.$project_name.'/'.$last;
+    // print $command_3 . '<br />';
+    //
+    // // exec($command_1, $output, $retval);
+    // // echo "Returned with status $retval and output:\n";
+    // exec($command_2, $output, $retval);
+    // // echo "Returned with status $retval and output:\n";
+    // exec($command_3, $output, $retval);
+    // // echo "Returned with status $retval and output:\n";
+
+    ?>
+        <hr />
+    <a href="/" class="btn btn-primary btn-sm">Обратно к списку проектов</a>
+    <?
+    exit();
+}
+
+?>
+
 <h2 align="center" style="margin-top: 100px;">Локальная разработка проектов</h2>
 
 <table class="table table-bordered table-striped" style="width: 50%; margin: 0 auto; margin-bottom: 100px;">
@@ -124,7 +166,7 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
         $vars['DP_PUBLIC_PATH'] = $row['DP_PUBLIC_PATH'];
         $vars['PHP_IMAGE'] = $row['PHP_IMAGE'];
         $vars['NODEJS_IMAGE'] = $row['NODEJS_IMAGE'];
-        $vars['DP_PORT'] = $row['DP_PORT'];
+        $vars['DP_PORT'] =  $row['DP_PORT'] < 10 ? '0' . $row['DP_PORT'] : $row['DP_PORT'];
         $vars['DP_PORT_SSL'] = $row['DP_PORT_SSL'];
         $vars['DP_NAME'] = $row['DP_NAME'];
         # $vars['DB_CHARSET'] = $row[''];
@@ -200,30 +242,51 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
                 ?>
             </td>
             <td nowrap>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDbImport_<?=$row['DP_PORT'];?>">
-                    <span class="glyphicon glyphicon-play"></span> DB Import
-                </button>
+                <a type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDbImport_<?=$row['DP_PORT'];?>">
+                    <span class="glyphicon glyphicon-play"></span> DB Refresh
+                </a>
                 <!-- Modal -->
                 <div class="modal fade" id="modalDbImport_<?=$row['DP_PORT'];?>" tabindex="-1" aria-labelledby="modalDbImportLabel_<?=$row['DP_PORT'];?>" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalStopLabel_<?=$row['DP_PORT'];?>">Импорт БД</h5>
+                                <h5 class="modal-title" id="modalStopLabel_<?=$row['DP_PORT'];?>">Обновить БД</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <?php
-                                foreach (glob("projects/" . $row['DP_NAME'] . "/.dbdumb/*/*") as $filename) {
-                                    $driver = end(explode("/", dirname($filename)));
-                                    switch($driver) {
-                                        case 'mysql':
-                                            print 'mysql -u root -p docker_password '. $row['DP_NAME'] .' < '.basename($filename);
-                                            print '|' . date("d-m-Y H:i:s.", filectime($filename));
-                                            break;
-                                    }
-                                    print "<br />";
-                                }
-                                ?>
+                                <strong>Предварительно нужно установить SMBClient в Linux</strong><br />
+                                <strong>Выполнить последовательно команды в любой дирректории</strong>
+                                <hr />
+                                <pre><?php
+                                $last = '10.10.2023.sql';
+                                @mkdir('.temp/'.$row['DP_NAME']);
+
+                                // copy from "Помойка (удаленный диск)"
+                                $command_2 = 'cd ~/Desktop/Docker && smbget smb://192.168.0.234/wd-elements-25a3-1031/DOCKER/DUMPS/'.$row['DP_NAME'].'/'.$last.' -U "anonymouse%" -o .temp/'.$row['DP_NAME'].'/'.$last;
+                                print $command_2 . '<br />';
+
+                                // import
+                                $command_3 = 'cd ~/Desktop/Docker && docker exec -i '.$row['DP_NAME'].'_db-mysql_1 mysql -h db-mysql -uroot -pdocker_password '.$row['DP_NAME'].' < .temp/'.$row['DP_NAME'].'/'.$last;
+                                print $command_3 . '<br />';
+
+                                // foreach (glob("projects/" . $row['DP_NAME'] . "/.dbdumb/*/*") as $filename) {
+                                //     $driver = end(explode("/", dirname($filename)));
+                                //     switch($driver) {
+                                //         case 'mysql':
+                                //             print 'mysql -u root -p docker_password '. $row['DP_NAME'] .' < '.basename($filename);
+                                //             print '|' . date("d-m-Y H:i:s.", filectime($filename));
+                                //             break;
+                                //     }
+                                //     print "<br />";
+                                // }
+                                // $output=null;
+                                // $retval=null;
+                                // exec('smbget smb://192.168.0.234/wd-elements-25a3-1031/DOCKER/DUMPS/bitza_auto/bitza_auto_ru.sql -U "anonymouse%" -o .temp/bitza_auto/bitza_auto_ru.sql', $output, $retval);
+                                // echo "Returned with status $retval and output:\n";
+                                // print_r($output);
+                                // exit();
+                                # exec smbget smb://192.168.0.234/wd-elements-25a3-1031/Rsync_tutorial.docx
+                                ?></pre>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -233,7 +296,7 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
                 </div>
             </td>
             <td>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDbImport_<?=$row['DP_PORT'];?>">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCiCd_<?=$row['DP_PORT'];?>">
                     <span class="glyphicon glyphicon-play"></span> CD/CD
                 </button>
             </td>

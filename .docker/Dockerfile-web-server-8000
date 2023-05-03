@@ -1,4 +1,4 @@
-FROM php:5.6-apache
+FROM php:8.1-apache
 
 WORKDIR /var/www/html
 
@@ -9,6 +9,14 @@ RUN groupmod -g 1000 www-data && \
 
 # Установка программ и утилит
 RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
- && rm -rf /var/lib/apt/lists/*
+    nano \
+    smbclient
+#    curl \
+#    wget
+# && rm -rf /var/lib/apt/lists/*
+
+# RUN apt install smbclient libsmbclient-dev
+# RUN pecl install smbclient
+# RUN docker-php-ext-enable smbclient
+# RUN docker-php-ext-install smbclient
+
