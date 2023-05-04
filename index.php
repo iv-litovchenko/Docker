@@ -1,3 +1,14 @@
+<?php
+// $ar = [];
+// $ar[] = '2024.01.02.sql';
+// $ar[] = '2023.06.15.sql';
+// $ar[] = '2023.03.10.sql';
+// $ar[] = '2023.02.14.sql';
+// sort($ar);
+// print "<pre>";
+// print_r($ar);
+// exit();
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -254,20 +265,42 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <strong>Предварительно нужно установить SMBClient в Linux</strong><br />
+                                <strong>Предварительно нужно установить SMBClient в Linux Ubuntu</strong><br />
+                                <pre>$ sudo apt update
+$ sudo apt install smbclient
+                                </pre>
                                 <strong>Выполнить последовательно команды в любой дирректории</strong>
                                 <hr />
                                 <pre><?php
-                                $last = '10.10.2023.sql';
+                                // Узнаем последний файл:
+                                // $last = '10.10.2023.sql';
+                                $command = "smbclient //192.168.0.234/wd-elements-25a3-1031 -U 'anonymouse%' -c 'cd DOCKER/DUMPS/".$row['DP_NAME']." ; ls'";
+                                // print $command . '<br />';
+
+                                $files = [];
+                                $output=null;
+                                $retval=null;
+                                exec($command, $files, $retval);
+                                $filesInSmb = [];
+                                foreach($files as $file) {
+                                    if(preg_match('/[0-9]{4}.[0-9]{2}.[0-9]{2}.(gz|sql)/is', $file, $matches)){
+                                        $filesInSmb[] = $matches[0];
+                                    }
+                                }
+
+                                sort($filesInSmb);
+                                @$last = $filesInSmb[0]; // "10.10.2023.sql";
                                 @mkdir('.temp/'.$row['DP_NAME']);
 
-                                // copy from "Помойка (удаленный диск)"
-                                $command_2 = 'cd ~/Desktop/Docker && smbget smb://192.168.0.234/wd-elements-25a3-1031/DOCKER/DUMPS/'.$row['DP_NAME'].'/'.$last.' -U "anonymouse%" -o .temp/'.$row['DP_NAME'].'/'.$last;
-                                print $command_2 . '<br />';
+                                if(!empty($last)){
+                                    // copy from "Помойка (удаленный диск)"
+                                    $command_2 = 'cd ~/Desktop/Docker && smbget smb://192.168.0.234/wd-elements-25a3-1031/DOCKER/DUMPS/'.$row['DP_NAME'].'/'.$last.' -U "anonymouse%" -o .temp/'.$row['DP_NAME'].'/'.$last;
+                                    print $command_2 . '<br />';
 
-                                // import
-                                $command_3 = 'cd ~/Desktop/Docker && docker exec -i '.$row['DP_NAME'].'_db-mysql_1 mysql -h db-mysql -uroot -pdocker_password '.$row['DP_NAME'].' < .temp/'.$row['DP_NAME'].'/'.$last;
-                                print $command_3 . '<br />';
+                                    // import
+                                    $command_3 = 'cd ~/Desktop/Docker && docker exec -i '.$row['DP_NAME'].'_db-mysql_1 mysql -h db-mysql -uroot -pdocker_password '.$row['DP_NAME'].' < .temp/'.$row['DP_NAME'].'/'.$last;
+                                    print $command_3 . '<br />';
+                                }
 
                                 // foreach (glob("projects/" . $row['DP_NAME'] . "/.dbdumb/*/*") as $filename) {
                                 //     $driver = end(explode("/", dirname($filename)));

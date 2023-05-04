@@ -6,8 +6,14 @@ services:
     build:
       dockerfile: .docker/Dockerfile-web-server-8000
       context: .
+    network_mode: "host"
     volumes:
       - '.docker/conf/php.ini:/usr/local/etc/php/conf.d/php.ini'
       - './:/var/www/html'
-    ports:
-      - '8000:80'
+#   ports:
+#      - '8000:80'
+
+networks:
+  host:
+    name: host
+    external: true

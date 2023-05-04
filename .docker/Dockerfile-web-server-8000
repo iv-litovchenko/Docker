@@ -10,7 +10,8 @@ RUN groupmod -g 1000 www-data && \
 # Установка программ и утилит
 RUN apt-get update && apt-get install -y \
     nano \
-    smbclient
+    smbclient \
+    iputils-ping
 #    curl \
 #    wget
 # && rm -rf /var/lib/apt/lists/*

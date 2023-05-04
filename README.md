@@ -1,7 +1,8 @@
 # DOCKER FOR ALL PROJECTS
 
 ## BASH DOCKER UP/DOWN
-- $ docker-compose up -d --build (запустить localhost:8000 - список всех проектов)
+1) $ git clone ~/Desktop/Docker (проект обязательно скачивается в папку на рабочем столе Linux)
+2) $ docker-compose up -d (запустить localhost - список всех проектов)
 
 ## PHP (APACHE), NODAJS, NPM (gulp, grunt, bower, electron-forge)
 - http://localhost:80XX/ - php или wordpress (в зависимости от образа)
