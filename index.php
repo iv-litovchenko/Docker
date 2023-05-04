@@ -283,7 +283,7 @@ $ sudo apt install smbclient
                                 exec($command, $files, $retval);
                                 $filesInSmb = [];
                                 foreach($files as $file) {
-                                    if(preg_match('/[0-9]{4}.[0-9]{2}.[0-9]{2}.(gz|sql)/is', $file, $matches)){
+                                    if(preg_match('/[0-9_.]+.(gz|sql|sql.gz)/is', $file, $matches)){
                                         $filesInSmb[] = $matches[0];
                                     }
                                 }
