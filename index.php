@@ -283,13 +283,14 @@ $ sudo apt install smbclient
                                 exec($command, $files, $retval);
                                 $filesInSmb = [];
                                 foreach($files as $file) {
-                                    if(preg_match('/[0-9_.]+.(gz|sql|sql.gz)/is', $file, $matches)){
+                                    if(preg_match('/[a-z]+_[0-9_.]+.(gz|sql|sql.gz)/is', $file, $matches)){
                                         $filesInSmb[] = $matches[0];
                                     }
                                 }
 
                                 sort($filesInSmb);
                                 @$last = $filesInSmb[0]; // "10.10.2023.sql";
+                                @$dbDriver = 'mysql'; // todo
                                 @mkdir('.temp/'.$row['DP_NAME']);
 
                                 if(!empty($last)){
