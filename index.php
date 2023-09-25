@@ -154,7 +154,7 @@ if(getenv("DOCKER_PROJECT_ENV") == 'local') { // localhost
         </td>
     </tr>
     <?php
-    $rows = array_map('str_getcsv', file('http://ilitovfa.beget.tech/docker-api/db.csv'));
+    $rows = array_map('str_getcsv', file('db.csv')); // http://ilitovfa.beget.tech/docker-api/
     $header = array_shift($rows);
     foreach ($rows as $data) {
         $row = array_combine($header, $data);
