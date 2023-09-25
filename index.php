@@ -1,14 +1,3 @@
-<?php
-// $ar = [];
-// $ar[] = '2024.01.02.sql';
-// $ar[] = '2023.06.15.sql';
-// $ar[] = '2023.03.10.sql';
-// $ar[] = '2023.02.14.sql';
-// sort($ar);
-// print "<pre>";
-// print_r($ar);
-// exit();
-?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -70,12 +59,13 @@ function get_readme_md($name) {
 // }
 // ksort($list);
 
-// $list = file_get_contents('http://ilitovfa.beget.tech/docker-api/');
-// if(empty($list)) {
+$list = file_get_contents('http://ilitovfa.beget.tech/docker-api/');
+if(empty($list)) {
+    print "docker-api error";
+    exit();
+}
 
-// }
-
-// $list = json_decode($list, true);
+$list = json_decode($list, true);
 #print $dockerContent;
 #exit();
 
