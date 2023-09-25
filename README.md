@@ -3,6 +3,7 @@
 ## BASH DOCKER UP/DOWN
 1) $ git clone ~/Desktop/Docker (проект обязательно скачивается в папку на рабочем столе Linux)
 2) $ docker-compose up -d (запустить localhost - список всех проектов)
+3) Смотри видео-инструкцию doc/docker-up-1.webm, doc/docker-up-2.webm 
 
 ## PHP (APACHE), NODAJS, NPM (gulp, grunt, bower, electron-forge)
 - http://localhost:80XX/ - php или wordpress (в зависимости от образа)
