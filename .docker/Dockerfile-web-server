@@ -61,21 +61,21 @@ RUN a2enmod ssl
 RUN apt-get update
 RUN apt-get -y upgrade
 
-# ENV NODEJS_IMAGE_URL=https://deb.nodesource.com/setup_${NODEJS_IMAGE}.x
+ENV NODEJS_IMAGE_URL=https://deb.nodesource.com/setup_${NODEJS_IMAGE}.x
 
-# RUN echo $NODEJS_IMAGE
-# RUN echo $NODEJS_IMAGE_URL
+RUN echo $NODEJS_IMAGE
+RUN echo $NODEJS_IMAGE_URL
 
-# RUN curl -sL "$NODEJS_IMAGE_URL" | sudo bash -
-# RUN apt-get --yes --force-yes install nodejs
+RUN curl -sL "$NODEJS_IMAGE_URL" | sudo bash -
+RUN apt-get --yes --force-yes install nodejs
 
 # Install gulp & bower
-# RUN npm install --global electron-forge
-# RUN npm install --global gulp
-# RUN npm install --global grunt
-# RUN npm install --global bower
-# RUN npm install --global less
-# RUN npm install --global sass
+RUN npm install --global electron-forge
+RUN npm install --global gulp
+RUN npm install --global grunt
+RUN npm install --global bower
+RUN npm install --global less
+RUN npm install --global sass
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
