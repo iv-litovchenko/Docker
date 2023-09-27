@@ -65,7 +65,7 @@ function get_readme_md($name) {
 //     exit();
 // }
 
-$list = json_decode($list, true);
+#$list = json_decode($list, true);
 #print $dockerContent;
 #exit();
 
