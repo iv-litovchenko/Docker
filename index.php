@@ -400,7 +400,7 @@ $ sudo apt install smbclient
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <pre>docker exec -it --user www-data <?=$row['DP_NAME']?>-web-server_1 bash</pre>
+                                <pre>docker exec -it --user www-data <?=$row['DP_NAME']?>-web-server-1 bash</pre>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
