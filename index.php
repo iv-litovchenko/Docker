@@ -59,11 +59,11 @@ function get_readme_md($name) {
 // }
 // ksort($list);
 
-$list = file_get_contents('http://ilitovfa.beget.tech/docker-api/');
-if(empty($list)) {
-    print "docker-api error";
-    exit();
-}
+// $list = file_get_contents('http://ilitovfa.beget.tech/docker-api/');
+// if(empty($list)) {
+//     print "docker-api error";
+//     exit();
+// }
 
 $list = json_decode($list, true);
 #print $dockerContent;
