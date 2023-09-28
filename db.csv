@@ -8,3 +8,5 @@ autoonline,5,80,public,php:5.6-apache,11,/var/www/autoonline/data/www/auto-onlin
 ds-union,6,80,.,wordpress:php7.3-apache,16,/var/www/ds-union/data/www/ds-union.ru,https://gitlab.com/eabest2020/ds-union,/kitchen,WP
 express-prava,7,80,public,php:7.3-apache,12,/var/www/express-prava/data/www/express-prava.ru,https://gitlab.com/eabest2020/express-prava,https://express-prava.ru/administrator,Laravel
 intertrade-msk,8,80,.,wordpress:php7.3-apache,16,,,https://intertrade-msk.ru/wp-admin,WP
+yaprava,9,80,frontend/www,php:5.6-apache,11,/var/www/yaprava/data/www/ya-prava.ru/,https://gitlab.com/auto-online/yaprava,,Yii1
+yapravaback,10,80,backend/www,php:5.6-apache,11,/var/www/yaprava/data/www/ya-prava.ru/,https://gitlab.com/auto-online/yaprava,,Yii1
